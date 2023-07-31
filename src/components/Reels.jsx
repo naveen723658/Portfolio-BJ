@@ -5,7 +5,7 @@ import "swiper/css/pagination";
 import { Box } from "@mui/material";
 import Player from "./Player";
 import { useFetchAllImagesMeta } from "@/hooks/firebase";
-import Iconify from "@/hooks/Iconify";
+import Iconify from "@/hooks/iconify/index";
 import { Pagination, Navigation } from "swiper";
 const Reels = () => {
   const galleryItems = [
