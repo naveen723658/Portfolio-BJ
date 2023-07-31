@@ -1,0 +1,67 @@
+/* Custom video controls */
+.custom-video-controls {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+}
+
+/* Show the custom controls on hover */
+.video-js:hover .custom-video-controls {
+    opacity: 1;
+}
+
+/* Custom play button */
+.custom-play-button {
+    cursor: pointer;
+    padding: 12px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: background-color 0.2s;
+}
+
+.custom-play-button svg {
+    fill: #fff;
+}
+
+.custom-play-button:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+/* Additional controls */
+.custom-control {
+    margin: 0 10px;
+    cursor: pointer;
+}
+
+.custom-control svg {
+    fill: #fff;
+}
+
+/* Video time and progress bar */
+.custom-video-time {
+    color: #fff;
+}
+
+.custom-loading-progress {
+    flex: 1;
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.custom-progress-bar {
+    height: 100%;
+    background-color: #fff;
+    width: 0;
+    transition: width 0.1s;
+}
