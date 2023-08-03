@@ -3,6 +3,7 @@
 /*----------------------------------------*/
 html,
 body {
+  background-image: url("/img/background4.jpg");
   height: 100%;
   font-family: "Josefin Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -52,7 +53,7 @@ p {
   line-height: 26px;
   margin: 0 0 15px 0;
 }
-a{
+a {
   text-decoration: none;
 }
 img {
@@ -413,7 +414,7 @@ ol {
   align-items: center;
 }
 .hero h2 {
-  font-family: 'Monoton', cursive;
+  font-family: "Monoton", cursive;
   color: #ffffffcc;
   font-weight: 400;
   margin-bottom: 20px;
@@ -1380,10 +1381,6 @@ ol {
   .blog__details__quote {
     padding: 30px 40px 35px 35px;
   }
-}
-
-body {
-  background-color: #100028;
 }
 
 .vjs-custom .vjs-big-play-button {

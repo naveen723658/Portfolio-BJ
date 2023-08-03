@@ -19,7 +19,7 @@ export default function Page() {
       <DynamicWork />
       <Services />
       <Reels />
-      <Counter />
+      {/* <Counter /> */}
       <Contact />
       <Footer />
     </>

@@ -5,7 +5,6 @@ import "swiper/css/effect-cards";
 import { EffectCards } from "swiper/modules";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
-
 const Hero = () => {
   const galleryItems = [
     {
@@ -62,14 +61,8 @@ const Hero = () => {
               </a>
             </div>
           </div>
-          {/* <div className="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
-            <img
-              className="rounded-lg-3"
-              src="bootstrap-docs.png"
-              alt=""
-              width={720}
-            />
-            <Swiper
+          <div className="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+            {/* <Swiper
               effect={"cards"}
               grabCursor={true}
               modules={[EffectCards]}
@@ -83,10 +76,12 @@ const Hero = () => {
                     width={600}
                     height={405}
                   />
+
                 </SwiperSlide>
               ))}
-            </Swiper>
-          </div> */}
+            </Swiper> */}
+      
+          </div>
         </div>
       </div>
     </section>
