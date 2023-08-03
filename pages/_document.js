@@ -11,7 +11,7 @@ export default function Document() {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin />
         <link
-          href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Play:wght@400;700&family=Josefin+Sans:wght@300;400;500;600;700&family=Pacifico&family=Moirai+One&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Play:wght@400;700&family=Josefin+Sans:wght@300;400;500;600;700&family=Pacifico&family=Moirai+One&family=Monoton&display=swap"
           rel="stylesheet"
         />
       </Head>

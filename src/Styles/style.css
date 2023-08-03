@@ -52,7 +52,9 @@ p {
   line-height: 26px;
   margin: 0 0 15px 0;
 }
-
+a{
+  text-decoration: none;
+}
 img {
   max-width: 100%;
 }
@@ -268,12 +270,9 @@ ol {
   Header
 -----------------------*/
 .header {
-  position: absolute;
-  left: 0;
-  top: 0;
   width: 100%;
   background: transparent;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.21);
   z-index: 9;
 }
 
@@ -387,7 +386,7 @@ ol {
 }
 
 /*---------------------
-  Swiper
+ hero Swiper
 -----------------------*/
 .hero > .swiper {
   width: 240px;
@@ -407,20 +406,16 @@ ol {
   Hero
 -----------------------*/
 .hero {
-  height: 90vh;
+  height: 80vh;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 110px;
 }
-.hero > h2 {
-  font-size: 4rem;
-  color: #fff;
-  text-align: center;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+.hero h2 {
+  font-family: 'Monoton', cursive;
+  color: #ffffffcc;
+  font-weight: 400;
   margin-bottom: 20px;
 }
 

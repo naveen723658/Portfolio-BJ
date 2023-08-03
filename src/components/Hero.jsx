@@ -46,30 +46,29 @@ const Hero = () => {
     // Add more items as needed
   ];
   return (
-    <section className="hero spad my-4">
-      <div className="container my-5">
-        <div className="row align-items-center">
-          <div className="col-lg-7 p-3 p-lg-5 pt-lg-3">
-            <h2 className="display-4 text-light fw-bold lh-1">
-              Border hero with cropped image and shadows
-            </h2>
-
-            <div className="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-              <button
-                type="button"
-                className="btn btn-primary btn-lg px-4 me-md-2 fw-bold"
-              >
-                Primary
-              </button>
+    <section className="hero">
+      <div className="container">
+        <div className="row">
+          <div className="col-lg-7 ">
+            <h2 className="display-4">Embrace the Director’s Chair</h2>
+            <p>
+              Craft stunning visuals with our state-of-the-art videography
+              solutions – because storytelling isn’t limited to words on a page.
+              Let your creative juices flow while we capture the magic.
+            </p>
+            <div className="d-grid gap-2 d-md-flex mt-2 justify-content-md-start mb-4 mb-lg-3">
+              <a href="#" className="primary-btn">
+                See More About Us
+              </a>
             </div>
           </div>
-          <div className="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
-            {/* <img
+          {/* <div className="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">
+            <img
               className="rounded-lg-3"
               src="bootstrap-docs.png"
               alt=""
               width={720}
-            /> */}
+            />
             <Swiper
               effect={"cards"}
               grabCursor={true}
@@ -87,7 +86,7 @@ const Hero = () => {
                 </SwiperSlide>
               ))}
             </Swiper>
-          </div>
+          </div> */}
         </div>
       </div>
     </section>
