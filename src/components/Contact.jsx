@@ -1,3 +1,5 @@
+import Iconify from "@/hooks/iconify/Iconify";
+
 const Contact = () => {
   return (
     <div>
@@ -8,7 +10,8 @@ const Contact = () => {
             <div className="col-lg-4 col-md-6 col-md-6 col-md-3">
               <div className="contact__widget__item">
                 <div className="contact__widget__item__icon">
-                  <i className="fa fa-map-marker" />
+                  {/* <i className="fa fa-map-marker" /> */}
+                  <Iconify icon="mdi:address-marker" />
                 </div>
                 <div className="contact__widget__item__text">
                   <h4>Address</h4>
@@ -19,7 +22,8 @@ const Contact = () => {
             <div className="col-lg-4 col-md-6 col-md-6 col-md-3">
               <div className="contact__widget__item">
                 <div className="contact__widget__item__icon">
-                  <i className="fa fa-phone" />
+                  {/* <i className="fa fa-phone" /> */}
+                  <Iconify icon="mingcute:phone-fill" />
                 </div>
                 <div className="contact__widget__item__text">
                   <h4>Hotline</h4>
@@ -30,7 +34,8 @@ const Contact = () => {
             <div className="col-lg-4 col-md-6 col-md-6 col-md-3">
               <div className="contact__widget__item">
                 <div className="contact__widget__item__icon">
-                  <i className="fa fa-map-marker" />
+                  {/* <i className="fa fa-map-marker" /> */}
+                  <Iconify icon="ic:round-email" />
                 </div>
                 <div className="contact__widget__item__text">
                   <h4>Email</h4>

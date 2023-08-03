@@ -3,6 +3,7 @@ import Masonry from "masonry-layout";
 import { useFetchAllImagesMeta } from "@/hooks/firebase";
 import Player from "./Player";
 import PlayModal from "./PlayModal";
+import Iconify from "@/hooks/iconify/Iconify";
 
 const Work = () => {
   const masonryRef = useRef(null);
@@ -98,7 +99,7 @@ const Work = () => {
               )}
               className="play-btn video-popup"
             >
-              <i className="fa fa-play" />
+              <Iconify icon="mingcute:play-fill" />
             </span>
           </div>
         ))}

@@ -1,3 +1,5 @@
+import Iconify from "@/hooks/iconify/index";
+
 const Navbar = () => {
   return (
     <header className="header">
@@ -35,19 +37,24 @@ const Navbar = () => {
               </nav>
               <div className="header__nav__social">
                 <a href="#">
-                  <i className="fa fa-facebook" />
+                  {/* <i className="fa fa-facebook" /> */}
+                  <Iconify icon="gg:facebook" />
                 </a>
                 <a href="#">
-                  <i className="fa fa-twitter" />
+                  {/* <i className="fa fa-twitter" /> */}
+                  <Iconify icon="akar-icons:twitter-fill" />
                 </a>
                 <a href="#">
-                  <i className="fa fa-dribbble" />
+                  {/* <i className="fa fa-instagram" /> */}
+                  <Iconify icon="fa6-brands:instagram" />
                 </a>
                 <a href="#">
-                  <i className="fa fa-instagram" />
+                  {/* <i className="fa fa-youtube-play" /> */}
+                  <Iconify icon="entypo-social:youtube" />
                 </a>
                 <a href="#">
-                  <i className="fa fa-youtube-play" />
+                  {/* <i className="fa fa-youtube-play" /> */}
+                  <Iconify icon="icomoon-free:whatsapp" />
                 </a>
               </div>
             </div>

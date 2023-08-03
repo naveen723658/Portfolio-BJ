@@ -15,11 +15,11 @@ export default function Page() {
   return (
     <>
       <Navbar />
-      {/* <Hero /> */}
-      <Services />
+      <Hero />
       <DynamicWork />
-      <Counter />
+      <Services />
       <Reels />
+      <Counter />
       <Contact />
       <Footer />
     </>
