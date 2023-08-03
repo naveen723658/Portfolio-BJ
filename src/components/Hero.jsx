@@ -46,7 +46,7 @@ const Hero = () => {
     // Add more items as needed
   ];
   return (
-    <section className="hero my-4">
+    <section className="hero spad my-4">
       <div className="container my-5">
         <div className="row align-items-center">
           <div className="col-lg-7 p-3 p-lg-5 pt-lg-3">
@@ -61,7 +61,6 @@ const Hero = () => {
               >
                 Primary
               </button>
-      
             </div>
           </div>
           <div className="col-lg-4 offset-lg-1 p-0 overflow-hidden shadow-lg">

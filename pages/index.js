@@ -15,8 +15,8 @@ export default function Page() {
   return (
     <>
       <Navbar />
-      <Hero />
-      <DynamicWork />
+      {/* <Hero /> */}
+      {/* <DynamicWork /> */}
       <Services />
       <Reels />
       <Counter />
