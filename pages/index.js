@@ -6,6 +6,8 @@ import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import Services from "@/components/Services";
 import Reels from "@/components/Reels";
+import One from "@/components/One";
+import About from "@/components/About";
 // import Work from "@/components/Work";
 const DynamicWork = dynamic(() => import("@/components/Work"), {
   ssr: false,
@@ -16,6 +18,8 @@ export default function Page() {
     <>
       <Navbar />
       <Hero />
+      <One />
+      <About />
       <DynamicWork />
       <Services />
       <Reels />

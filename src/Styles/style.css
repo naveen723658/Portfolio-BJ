@@ -425,7 +425,7 @@ ol {
 -----------------------*/
 .work {
   overflow: hidden;
-  background: #100028;
+  /* background: #100028; */
 }
 
 .work__gallery {
@@ -518,7 +518,7 @@ ol {
   Counter
 -----------------------*/
 .counter {
-  background: #100028;
+  /* background: #100028; */
   height: 840px;
   padding-top: 380px;
   overflow: hidden;
@@ -777,7 +777,7 @@ ol {
   About
 -----------------------*/
 .about {
-  background: #100028;
+  /* background: #100028; */
   padding-bottom: 150px;
 }
 
@@ -805,7 +805,7 @@ ol {
   Services
 -----------------------*/
 .services {
-  background: #100028;
+  /* background: #100028; */
   padding-bottom: 60px;
   padding-top: 110px;
 }
@@ -857,7 +857,7 @@ ol {
   Services Page
 -----------------------*/
 .services-page {
-  background: #100028;
+  /* background: #100028; */
   padding-bottom: 50px;
 }
 
@@ -877,9 +877,9 @@ ol {
 /*---------------------
   Portfolio
 -----------------------*/
-.portfolio {
+/* .portfolio {
   background: #100028;
-}
+} */
 
 .portfolio__filter {
   text-align: center;
@@ -1023,7 +1023,7 @@ ol {
   Contact Widget
 -----------------------*/
 .contact-widget {
-  background: #100028;
+  /* background: #100028; */
   padding-bottom: 70px;
 }
 
@@ -1035,7 +1035,9 @@ ol {
   height: 70px;
   width: 70px;
   border: 1px solid rgba(225, 225, 225, 0.5);
-  line-height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
   border-radius: 50%;
   float: left;
@@ -1064,7 +1066,7 @@ ol {
   Contact
 -----------------------*/
 .contact {
-  background: #100028;
+  /* background: #100028; */
   padding-top: 0;
   overflow: hidden;
 }
@@ -1338,6 +1340,13 @@ ol {
 
   .about__pic__item {
     margin-right: 0;
+  }
+  .One .play-btn{
+    border: none !important;
+  }
+  .One .play-btn .inner-circle{
+    width: 4rem !important;
+    height: 4rem !important;
   }
 }
 /* Small Device = 320px */

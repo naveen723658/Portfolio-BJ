@@ -3,14 +3,12 @@ import Iconify from "@/hooks/iconify/Iconify";
 const Contact = () => {
   return (
     <div>
-      {/* Contact Widget Section Begin */}
       <section className="contact-widget spad">
         <div className="container">
           <div className="row">
             <div className="col-lg-4 col-md-6 col-md-6 col-md-3">
               <div className="contact__widget__item">
                 <div className="contact__widget__item__icon">
-                  {/* <i className="fa fa-map-marker" /> */}
                   <Iconify icon="mdi:address-marker" />
                 </div>
                 <div className="contact__widget__item__text">
@@ -22,7 +20,6 @@ const Contact = () => {
             <div className="col-lg-4 col-md-6 col-md-6 col-md-3">
               <div className="contact__widget__item">
                 <div className="contact__widget__item__icon">
-                  {/* <i className="fa fa-phone" /> */}
                   <Iconify icon="mingcute:phone-fill" />
                 </div>
                 <div className="contact__widget__item__text">
@@ -34,7 +31,6 @@ const Contact = () => {
             <div className="col-lg-4 col-md-6 col-md-6 col-md-3">
               <div className="contact__widget__item">
                 <div className="contact__widget__item__icon">
-                  {/* <i className="fa fa-map-marker" /> */}
                   <Iconify icon="ic:round-email" />
                 </div>
                 <div className="contact__widget__item__text">
@@ -46,7 +42,6 @@ const Contact = () => {
           </div>
         </div>
       </section>
-      {/* Contact Widget Section End */}
       {/* Call To Action Section Begin */}
       <section className="contact spad">
         <div className="container">
