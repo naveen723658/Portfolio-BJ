@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Player from "./Player";
 import Iconify from "@/hooks/iconify/Iconify";
+import { motion } from "framer-motion";
 const One = () => {
   return (
     <>
@@ -13,11 +14,17 @@ const One = () => {
             sizes="100vw"
             style={{ width: "100%", height: "auto" }}
           />
-          <span className="play-btn video-popup">
+          <motion.span
+            className="play-btn video-popup"
+            whileHover={{ scale: null }}
+            animate={{ scale: [null, 1.2, 1.1, 1] }}
+            transition={{ ease: "linear", duration: 2, repeat: Infinity }}
+            style={{ translate: "-50% -50%", cursor: "pointer" }}
+          >
             <span className="inner-circle">
               <Iconify icon="mingcute:play-fill" />
             </span>
-          </span>
+          </motion.span>
         </div>
       </section>
     </>

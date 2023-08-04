@@ -270,6 +270,22 @@ ol {
 /*---------------------
   Header
 -----------------------*/
+.mobile-menu {
+  position: absolute;
+  top: 6.1rem;
+  width: 100%;
+  background: #1a1643f5;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.mobile-menu .navList {
+  display: flex;
+  flex-wrap: inherit;
+  align-items: flex-start !important;
+  gap: 1.2rem;
+  flex-direction: column;
+  padding: 1.5rem 1rem;
+}
+
 .header {
   width: 100%;
   background: transparent;
@@ -1135,7 +1151,7 @@ ol {
   }
 }
 /* Medium Device = 1200px */
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
+@media only screen and (min-width: 992px) and (max-width: 1200px) {
   .header__nav__menu {
     margin-right: 25px;
   }
@@ -1165,7 +1181,7 @@ ol {
   }
 }
 /* Tablet Device = 768px */
-@media only screen and (min-width: 768px) and (max-width: 991px) {
+@media screen and (min-width: 768px) and (max-width: 991.5px) {
   .services__title {
     margin-bottom: 50px;
   }
@@ -1233,7 +1249,7 @@ ol {
   }
 }
 /* Wide Mobile = 480px */
-@media only screen and (max-width: 767px) {
+@media screen and (max-width: 768px) {
   .services__title {
     margin-bottom: 50px;
   }
@@ -1341,16 +1357,16 @@ ol {
   .about__pic__item {
     margin-right: 0;
   }
-  .One .play-btn{
+  .One .play-btn {
     border: none !important;
   }
-  .One .play-btn .inner-circle{
+  .One .play-btn .inner-circle {
     width: 4rem !important;
     height: 4rem !important;
   }
 }
 /* Small Device = 320px */
-@media only screen and (max-width: 479px) {
+@media screen and (max-width: 479px) {
   .hero__text h2 {
     font-size: 30px;
     line-height: 40px;

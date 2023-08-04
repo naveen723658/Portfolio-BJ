@@ -7,6 +7,7 @@ import Player from "./Player";
 import { useFetchAllImagesMeta } from "@/hooks/firebase";
 import Iconify from "@/hooks/iconify/index";
 import { Pagination, Navigation } from "swiper";
+import { motion } from "framer-motion";
 const Reels = () => {
   const galleryItems = [
     {

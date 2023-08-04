@@ -5,6 +5,7 @@ import "swiper/css/effect-cards";
 import { EffectCards } from "swiper/modules";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
+import { motion } from "framer-motion";
 const Hero = () => {
   const galleryItems = [
     {

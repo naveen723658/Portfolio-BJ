@@ -4,7 +4,7 @@ import { useFetchAllImagesMeta } from "@/hooks/firebase";
 import Player from "./Player";
 import PlayModal from "./PlayModal";
 import Iconify from "@/hooks/iconify/Iconify";
-
+import { motion } from "framer-motion";
 const Work = () => {
   const masonryRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
@@ -85,23 +85,29 @@ const Work = () => {
       <div className="work__gallery" ref={masonryRef}>
         <div className="grid-sizer"></div>
         {galleryItems.map((item, key) => (
-          <div
+          <motion.div
             key={item.id}
             className={`work__item item__${
               key === 0 ? 1 : key === 3 ? 2 : key === 6 ? 1 : key === 9 ? 2 : 0
-            } set-bg`}
+            } set-bg box`}
             data-setbg={`${item.imageUrl}`}
+            whileHover={{ scale: [null, 1, 0.9] }}
+            transition={{ duration: 0.5 }}
           >
-            <span
+            <motion.div
+              whileHover={{ scale: null }}
+              animate={{ scale: [null, 1.3, 1.2, 1.1, 1] }}
+              transition={{ ease: "linear", duration: 2, repeat: Infinity }}
               onClick={() => (
                 handlePlay(),
                 setSource({ src: item.videoUrl, type: "video/mp4" })
               )}
-              className="play-btn video-popup"
+              style={{ cursor: "pointer" }}
+              className="play-btn video-popup box"
             >
               <Iconify icon="mingcute:play-fill" />
-            </span>
-          </div>
+            </motion.div>
+          </motion.div>
         ))}
       </div>
       <PlayModal
