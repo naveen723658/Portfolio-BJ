@@ -14,8 +14,10 @@
     "@iconify/react": "^4.1.1",
     "@mui/material": "^5.14.2",
     "bootstrap": "^5.3.1",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.3.1",
     "firebase": "^10.1.0",
+    "formik": "^2.4.3",
     "framer-motion": "^10.15.0",
     "iconify": "^1.4.0",
     "masonry-layout": "^4.2.2",
@@ -23,6 +25,7 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "swiper": "^10.0.4",
-    "video.js": "^8.3.0"
+    "video.js": "^8.3.0",
+    "yup": "^1.2.0"
   }
 }
