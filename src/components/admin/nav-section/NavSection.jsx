@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import {Link as RouterLink} from "next/link";
+import Link from "next/link";
 // @mui
 import { Box, List, ListItemText } from "@mui/material";
 //
@@ -34,9 +34,9 @@ function NavItem({ item }) {
 
   return (
     <StyledNavItem
-      component={RouterLink}
-      to={path}
-      sx={{
+      component={Link}
+      href={path}
+      style={{
         "&.active": {
           color: "text.primary",
           bgcolor: "action.selected",

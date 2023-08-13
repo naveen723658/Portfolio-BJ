@@ -1,5 +1,5 @@
 import Iconify from "@/hooks/iconify/Iconify";
-import { Box, Drawer, Link, Typography, Avatar } from "@mui/material";
+import { Box, Drawer, Typography, Avatar } from "@mui/material";
 import useResponsive from "@/hooks/mediaquery/useResponsive";
 import React, { useEffect, useState } from "react";
 import account from "./_mock/account";
@@ -7,6 +7,7 @@ import Scrollbar from "./scrollbar";
 import navConfig from "./config";
 import { styled, alpha } from "@mui/material/styles";
 import NavSection from "./nav-section";
+import Link from "next/link";
 const NAV_WIDTH = 280;
 const StyledAccount = styled("div")(({ theme }) => ({
   display: "flex",
@@ -30,29 +31,21 @@ const Sidebar = ({ openNav, onCloseNav }) => {
       }}
     >
       <Box sx={{ px: 2.5, py: 3, display: "inline-flex" }}>
-        <Link underline="none" href="/">
-          {/* <img src="/images/vips_full_logo.png" /> */}
+        <Link href="/admin">
           Brijesh <span>Gupta</span>
         </Link>
-        {/* <Logo /> */}
       </Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link underline="none">
-          <StyledAccount>
-            <Avatar src={account.photoURL} alt="photoURL" />
+        <StyledAccount>
+          <Avatar src={account.photoURL} alt="photoURL" />
 
-            <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
-                {account.displayName}
-              </Typography>
-
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {account.role}
-              </Typography>
-            </Box>
-          </StyledAccount>
-        </Link>
+          <Box sx={{ ml: 2 }}>
+            <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
+              {account.displayName}
+            </Typography>
+          </Box>
+        </StyledAccount>
       </Box>
       {navConfig && <NavSection data={navConfig} />}
 
