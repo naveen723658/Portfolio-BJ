@@ -1,12 +1,15 @@
-import Head from "next/head";
 
+import Head from "next/head";
+import dynamic from "next/dynamic";
+const Dasboard = dynamic(() => import("@/components/admin/Layout"), {
+  ssr: false,
+});
 const Page = () => (
   <>
-    {" "}
     <Head>
-      <title>Overview | Devias Kit</title>
+      <title>Dasboard | Bgupta panel</title>
     </Head>
-    <h1>Hello </h1>
+    <Dasboard />
   </>
 );
 
