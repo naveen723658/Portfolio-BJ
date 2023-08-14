@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 const Dasboard = dynamic(() => import("@/components/admin/Layout"), {
   ssr: false,
 });
+
 const Page = () => (
   <>
     <Head>

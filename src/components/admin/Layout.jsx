@@ -3,8 +3,9 @@ import FilesUpload from "./HeroUpload";
 
 import React, { useState, useEffect } from "react";
 
-import { Grid, Box } from "@mui/material";
-
+import { AuthContext } from "@/firebase/auth";
+import { useContext } from "react";
+import { useRouter } from "next/router";
 import { styled } from "@mui/material/styles";
 import Sidebar from "./Sidebar";
 
@@ -34,6 +35,14 @@ const Main = styled("div")(({ theme }) => ({
 
 const Layout = ({ component }) => {
   const [open, setOpen] = useState(false);
+  // const currentUser = useContext(AuthContext);
+  // const Router = useRouter();
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     Router.push("/admin/auth/login");
+  //   }
+  // }, [currentUser, Router]);
+  // console.log(currentUser);
   return (
     <StyledRoot>
       <Header onOpenNav={() => setOpen(true)} />

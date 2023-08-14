@@ -23,6 +23,7 @@
     "iconify": "^1.4.0",
     "masonry-layout": "^4.2.2",
     "next": "13.4.12",
+    "next-auth": "^4.23.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "simplebar-react": "^3.2.4",

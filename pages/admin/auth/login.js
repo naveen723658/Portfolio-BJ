@@ -1,23 +1,19 @@
-import { useCallback, useState } from "react";
-import Head from "next/head";
-import { useRouter } from "next/navigation";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+"use client";
 import {
   Alert,
   Box,
   Button,
-  FormHelperText,
-  Link,
   Stack,
   Tab,
   Tabs,
   TextField,
   Typography,
 } from "@mui/material";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "@/firebase/auth";
-
+import { signIn } from "next-auth/react";
+import { useState, useCallback, useEffect } from "react";
+import Head from "next/head";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 function Copyright(props) {
   return (
     <Typography
@@ -37,7 +33,6 @@ function Copyright(props) {
 }
 
 const Page = () => {
-  const router = useRouter();
   const [method, setMethod] = useState("email");
   const formik = useFormik({
     initialValues: {
@@ -53,23 +48,14 @@ const Page = () => {
       password: Yup.string().max(255).required("Password is required"),
     }),
     onSubmit: async (values, helpers) => {
+      const { email, password } = values;
       try {
-        await signInWithEmailAndPassword(auth, values.email, values.password)
-          .then((userCredential) => {
-            const user = userCredential.user;
-            console.log(user);
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            console.log(errorCode, errorMessage);
-            try {
-              setError(errorCode.split("/")[1].split("-").join(" "));
-            } catch (error) {
-              setError("Something went wrong");
-            }
-          });
-        router.push("/admin");
+        signIn("credentials", {
+          email,
+          password,
+          redirect: true,
+          callbackUrl: "/admin",
+        });
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
@@ -77,7 +63,6 @@ const Page = () => {
       }
     },
   });
-
   const handleMethodChange = useCallback((event, value) => {
     setMethod(value);
   }, []);
