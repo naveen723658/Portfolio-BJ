@@ -4,7 +4,7 @@ import "../src/Styles/card.css";
 import SessionProvider from "@/app/SessionProvider";
 export default function App({ Component, pageProps }) {
   return (
-    <SessionProvider>
+    <SessionProvider >
       <Component {...pageProps} />
     </SessionProvider>
   );

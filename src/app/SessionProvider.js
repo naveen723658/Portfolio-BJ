@@ -1,8 +1,6 @@
 import React from "react";
 import { SessionProvider as Provider } from "next-auth/react";
-
 function SessionProvider({ children }) {
-  return <Provider>{children}</Provider>;
+  return <Provider refetchOnWindowFocus={true}>{children}</Provider>;
 }
-
 export default SessionProvider;

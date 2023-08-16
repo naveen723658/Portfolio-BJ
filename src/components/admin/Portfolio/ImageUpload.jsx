@@ -29,6 +29,8 @@ import {
   setDoc,
 } from "firebase/firestore";
 import db from "@/firebase/firestore";
+import auth from "@/firebase/auth";
+import { useSession } from "next-auth/react";
 // import AlertDialog from "../../components/AlertDialog/AlertDialog";
 
 async function NewImage(file, setData, id) {
@@ -36,6 +38,7 @@ async function NewImage(file, setData, id) {
     collection(doc(db, "/Data/Portfolio/"), "Images"),
     { downloadURL: "" }
   );
+
   const imageRef = ref(storage, `Images/${docRef.id}`);
   const uploadTask = uploadBytesResumable(imageRef, file);
   uploadTask.on(
@@ -124,7 +127,7 @@ export default function ImageUpload() {
     message: "",
     severity: "success",
   });
-
+  const { data: session } = useSession();
   const [images, setImages] = useState([]);
   useEffect(() => {
     async function getImages() {
@@ -135,7 +138,14 @@ export default function ImageUpload() {
     }
     getImages();
   }, []);
-
+  useEffect(() => {
+    const currentUser = auth.currentUser;
+    if (currentUser) {
+      console.log("Current user:", currentUser);
+    } else {
+      console.log("No user signed in.");
+    }
+  }, [session]);
   return (
     <>
       <Container>
