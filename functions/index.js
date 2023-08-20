@@ -4,75 +4,49 @@
 
 // admin.initializeApp();
 
-// exports.getVideoMetadata = functions.https.onRequest(async (req, res) => {
-//   const fileRef = admin
-//     .storage()
-//     .bucket()
-//     .file(
-//       "DCC Animal Hospital/A true companion_2.mp4"
-//     );
-
-//   try {
-//     const [metadata] = await fileRef.getMetadata();
-//     console.log("Video Metadata:", metadata);
-
-//     // Access individual metadata properties
-//     const contentType = metadata.contentType; // Video type (MIME type)
-//     const size = metadata.size; // File size in bytes
-//     const width = metadata.metadata?.width; // Video width (if available)
-//     const height = metadata.metadata?.height; // Video height (if available)
-
-//     // Do something with the metadata...
-
-//     res.status(200).send("Video metadata retrieved successfully.");
-//   } catch (error) {
-//     console.error("Error retrieving video metadata:", error);
-//     res.status(500).send("Error retrieving video metadata.");
-//   }
-// });
 
 // exports.getVideoMetadata = functions.https.onRequest(async (req, res) => {
-//   const fileRef = admin.storage().bucket().file("DCC Animal Hospital/Ex_2.mp4");
+  // const fileRef = admin.storage().bucket().file("DCC Animal Hospital/Ex_2.mp4");
 
-//   try {
-//     const [metadata] = await fileRef.getMetadata();
-//     console.log("Video Metadata:", metadata);
+  // try {
+  //   const [metadata] = await fileRef.getMetadata();
+  //   console.log("Video Metadata:", metadata);
 
-//     // Use ffprobe-static to get video width and height
-//     const { spawn } = require("child_process");
-//     const cmd = `${ffprobeStatic.path} -v error -select_streams v:0 -show_entries stream=width,height -of json "https://firebasestorage.googleapis.com/v0/b/brijesh-kumar-96397.appspot.com/o/DCC%20Animal%20Hospital%2FEx_2.mp4?alt=media&token=99522f6a-e797-4ce4-8f32-127bac743ba4"`;
-//     const ffprobeProcess = spawn(cmd, { shell: true });
+  //   // Use ffprobe-static to get video width and height
+  //   const { spawn } = require("child_process");
+  //   const cmd = `${ffprobeStatic.path} -v error -select_streams v:0 -show_entries stream=width,height -of json "https://firebasestorage.googleapis.com/v0/b/brijesh-kumar-96397.appspot.com/o/DCC%20Animal%20Hospital%2FEx_2.mp4?alt=media&token=99522f6a-e797-4ce4-8f32-127bac743ba4"`;
+  //   const ffprobeProcess = spawn(cmd, { shell: true });
 
-//     let videoInfo = "";
-//     ffprobeProcess.stdout.on("data", (data) => {
-//       videoInfo += data.toString();
-//     });
+  //   let videoInfo = "";
+  //   ffprobeProcess.stdout.on("data", (data) => {
+  //     videoInfo += data.toString();
+  //   });
 
-//     ffprobeProcess.stderr.on("data", (data) => {
-//       console.error("Error retrieving video metadata:", data.toString());
-//     });
+  //   ffprobeProcess.stderr.on("data", (data) => {
+  //     console.error("Error retrieving video metadata:", data.toString());
+  //   });
 
-//     ffprobeProcess.on("close", (code) => {
-//       if (code === 0) {
-//         const parsedVideoInfo = JSON.parse(videoInfo);
-//         const width = parsedVideoInfo.streams[0].width; // Video width
-//         const height = parsedVideoInfo.streams[0].height; // Video height
+  //   ffprobeProcess.on("close", (code) => {
+  //     if (code === 0) {
+  //       const parsedVideoInfo = JSON.parse(videoInfo);
+  //       const width = parsedVideoInfo.streams[0].width; // Video width
+  //       const height = parsedVideoInfo.streams[0].height; // Video height
 
-//         console.log("Video Width:", width);
-//         console.log("Video Height:", height);
+  //       console.log("Video Width:", width);
+  //       console.log("Video Height:", height);
 
-//         // Do something with the metadata...
+  //       // Do something with the metadata...
 
-//         res.status(200).send("Video metadata retrieved successfully.");
-//       } else {
-//         console.error("ffprobe process exited with code:", code);
-//         res.status(500).send("Error retrieving video metadata.");
-//       }
-//     });
-//   } catch (error) {
-//     console.error("Error retrieving video metadata:", error);
-//     res.status(500).send("Error retrieving video metadata.");
-//   }
+  //       res.status(200).send("Video metadata retrieved successfully.");
+  //     } else {
+  //       console.error("ffprobe process exited with code:", code);
+  //       res.status(500).send("Error retrieving video metadata.");
+  //     }
+  //   });
+  // } catch (error) {
+  //   console.error("Error retrieving video metadata:", error);
+  //   res.status(500).send("Error retrieving video metadata.");
+  // }
 // });
 
 const functions = require("firebase-functions");

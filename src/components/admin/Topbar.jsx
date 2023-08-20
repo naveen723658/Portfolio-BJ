@@ -1,3 +1,4 @@
+"use client";
 import Iconify from "@/hooks/iconify/Iconify";
 import { bgBlur } from "@/hooks/cssStyles";
 import React, { useState, useEffect } from "react";
@@ -18,8 +19,8 @@ import {
 } from "@mui/material";
 import PropTypes from "prop-types";
 import Searchbar from "./nav-section/Searchbar";
-import { signOut } from "next-auth/react";
-import { auth } from "@/firebase/auth";
+import { logOut } from "@/firebase/auth";
+import { useRouter } from "next/navigation";
 const NAV_WIDTH = 280;
 
 const HEADER_MOBILE = 64;
@@ -44,6 +45,7 @@ Header.propTypes = {
   onOpenNav: PropTypes.func,
 };
 export default function Header({ onOpenNav }) {
+  const router = useRouter();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -140,12 +142,9 @@ export default function Header({ onOpenNav }) {
           Notification
         </MenuItem>
         <MenuItem
-          onClick={() => {
+          onClick={async () => {
             handleClose();
-            signOut(auth, {
-              redirect: true,
-              callbackUrl: "/admin/auth/login",
-            });
+            await logOut(router, "/admin/auth/login");
           }}
         >
           <ListItemIcon>

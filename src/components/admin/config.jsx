@@ -21,7 +21,7 @@ const navConfig = [
   },
   {
     title: "Videos",
-    path: "/admin/videos",
+    path: "/admin/video",
     icon: <Icon fontSize={20} icon="fluent:video-32-filled" />,
   },
   {

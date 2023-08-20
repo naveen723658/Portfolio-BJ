@@ -5,7 +5,12 @@ import { motion } from "framer-motion";
 const One = () => {
   return (
     <>
-      <section className="One my-4 py-4">
+      <section
+        className="One py-4"
+        style={{
+          background: "#131e25",
+        }}
+      >
         <div style={{ position: "relative" }}>
           <Image
             src="/img/portfolio/infra_img.png"

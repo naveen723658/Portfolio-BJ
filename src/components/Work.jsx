@@ -22,9 +22,9 @@ const Work = () => {
 
   const [imageMeta, loading] = useFetchAllImagesMeta(`DCC Animal Hospital/`);
 
-  useEffect(() => {
-    console.log(imageMeta);
-  }, [imageMeta]);
+  // useEffect(() => {
+  //   console.log(imageMeta);
+  // }, [imageMeta]);
   useLayoutEffect(() => {
     const masonry = new Masonry(masonryRef.current, {
       itemSelector: ".work__item",

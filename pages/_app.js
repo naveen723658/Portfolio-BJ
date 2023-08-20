@@ -1,11 +1,14 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../src/Styles/style.css";
 import "../src/Styles/card.css";
-import SessionProvider from "@/app/SessionProvider";
+import { AuthContextProvider } from "@/context/AuthContext";
+import AuthMiddleware from "./_authmiddleware";
 export default function App({ Component, pageProps }) {
   return (
-    <SessionProvider >
-      <Component {...pageProps} />
-    </SessionProvider>
+    <AuthContextProvider>
+      <AuthMiddleware>
+        <Component {...pageProps} />
+      </AuthMiddleware>
+    </AuthContextProvider>
   );
 }

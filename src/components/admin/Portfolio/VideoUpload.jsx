@@ -31,6 +31,8 @@ import {
 import db from "@/firebase/firestore";
 import auth from "@/firebase/auth";
 import { useAuthContext } from "@/context/AuthContext";
+import { useFetchAllImagesMeta } from "@/hooks/Firebase/fetchdata";
+// import { getVideoDetailsAndThumbnail } from "@/hooks/videometa";
 async function NewImage(file, setData, id) {
   const docRef = await addDoc(
     collection(doc(db, "/Data/Portfolio/"), "Images"),
@@ -117,7 +119,7 @@ async function deleteImage(id, setData) {
 
 // ----------------------------------------------------------------------
 
-export default function ImageUpload() {
+export default function VideoUpload() {
   const [selected, setSelected] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
   const [snackbarStatus, setSnackbarStatus] = useState({
@@ -125,26 +127,21 @@ export default function ImageUpload() {
     message: "",
     severity: "success",
   });
-  const [images, setImages] = useState([]);
+  const [video, setVideo] = useState([]);
+  const [imageMeta, loading] = useFetchAllImagesMeta("Oceedee Campaign Shoot/");
+  const [temp, setTemp] = useState();
+  // getVideoDetailsAndThumbnail(
+  //   "https://firebasestorage.googleapis.com/v0/b/brijesh-kumar-96397.appspot.com/o/Infrastructure%20and%20Property%20Shoot%2FCottage%201_3.mp4?alt=media&token=b1a97dd5-5be5-41f8-8889-5fbe02b9f63a"
+  // );
   useEffect(() => {
-    async function getImages() {
-      const imageRef = collection(db, "/Data/Portfolio/", "Images");
-      const imageSnapshot = await getDocs(imageRef);
-      const imageList = imageSnapshot.docs.map((doc) => doc.data());
-      setImages(imageList);
+    async function getvideo() {
+      const videoRef = collection(db, "/Data/Portfolio/", "video");
+      const videoSnapshot = await getDocs(videoRef);
+      const videoList = videoSnapshot.docs.map((doc) => doc.data());
+      //   setVideo(videoList);
     }
-    getImages();
+    getvideo();
   }, []);
-  const { user } = useAuthContext();
-  useEffect(() => {
-    const currentUser = auth.currentUser;
-    console.log(currentUser);
-    if (currentUser) {
-      console.log("user signed in");
-    } else {
-      console.log("No user signed in.");
-    }
-  }, [user]);
   return (
     <>
       <Container>
@@ -155,7 +152,7 @@ export default function ImageUpload() {
           mb={5}
         >
           <Typography variant="h4" sx={{ fontWeight: "bold" }}>
-            Image Upload
+            Video Upload
           </Typography>
 
           <Button
@@ -163,17 +160,21 @@ export default function ImageUpload() {
             variant="contained"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            New Image
+            Bulk upload
             <input
               type="file"
               multiple
-              accept="image/*"
+              accept="video/*"
               hidden
               onChange={(ev) => {
                 if (ev.target.files.length > 0) {
-                  Array.from(ev.target.files).forEach((file) => {
-                    NewImage(file, setImages);
-                  });
+                    let file = ev.target.files[0];
+                    
+                    setTemp(URL.createObjectURL(file));
+                    console.log(URL.createObjectURL(file));
+                  //   Array.from(ev.target.files).forEach((file) => {
+                  //     NewImage(file, setImages);
+                  //   });
                 }
               }}
             />
@@ -189,9 +190,9 @@ export default function ImageUpload() {
               m: 2,
             }}
           >
-            {images.map((image) => (
+            {video.map((item) => (
               <Box
-                key={image.downloadURL}
+                key={item.downloadURL}
                 sx={{
                   position: "relative",
                   "&:hover": {
@@ -203,7 +204,7 @@ export default function ImageUpload() {
               >
                 <img
                   height="140"
-                  src={image.downloadURL}
+                  src={item.downloadURL}
                   alt="Image"
                   style={{
                     objectFit: "contain",
@@ -249,7 +250,7 @@ export default function ImageUpload() {
                       variant="contained"
                       startIcon={<Iconify icon="eva:trash-2-fill" />}
                       onClick={(ev) => {
-                        setSelected(image.id);
+                        setSelected(item.id);
                         setDialogOpen(true);
                       }}
                     >

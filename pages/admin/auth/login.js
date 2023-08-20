@@ -9,11 +9,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { signIn } from "next-auth/react";
 import { useState, useCallback, useEffect } from "react";
 import Head from "next/head";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { signIn } from "@/firebase/auth";
+import { useRouter } from "next/navigation";
 function Copyright(props) {
   return (
     <Typography
@@ -33,6 +34,7 @@ function Copyright(props) {
 }
 
 const Page = () => {
+  const router = useRouter();
   const [method, setMethod] = useState("email");
   const formik = useFormik({
     initialValues: {
@@ -50,12 +52,7 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       const { email, password } = values;
       try {
-        signIn("credentials", {
-          email,
-          password,
-          redirect: true,
-          callbackUrl: "/admin",
-        });
+        await signIn(email, password, router, "/admin");
       } catch (err) {
         helpers.setStatus({ success: false });
         helpers.setErrors({ submit: err.message });
