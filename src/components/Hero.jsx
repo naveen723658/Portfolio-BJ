@@ -13,6 +13,7 @@ import Navbar from "./Navbar";
 import db from "@/firebase/firestore";
 import { Skeleton } from "@mui/material";
 import Player from "./Player";
+import useMediaQuery from "@mui/material/useMediaQuery";
 export const Div = styled.div`
   background: radial-gradient(
     circle at 100.9% 51.2%,
@@ -59,27 +60,32 @@ export const Sidediv = styled.div`
 const Hero = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const mediaWidth = useMediaQuery("(min-width:991.5px)");
   useEffect(() => {
-    const collectionRef = collection(db, "/Data/Portfolio/video");
-    const fetchData = async () => {
-      const q = query(collectionRef, where("hero", "==", true), limit(6));
-      const querySnapshot = await getDocs(q);
-      const temp = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setData(temp);
-      setLoading(false);
-    };
-    fetchData();
-  }, []);
+    if (mediaWidth) {
+      const collectionRef = collection(db, "/Data/Portfolio/video");
+      const fetchData = async () => {
+        const q = query(collectionRef, where("hero", "==", true), limit(6));
+        const querySnapshot = await getDocs(q);
+        const temp = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setData(temp);
+        setLoading(false);
+      };
+      fetchData();
+    }
+  }, [mediaWidth]);
+  
+  console.log(data);
   return (
     <Div>
       <Navbar />
       <section className="hero" style={{ position: "relative" }}>
         <div className="container">
           <div className="row">
-            <div className="col-lg-6">
+            <div className="col-xl-6 col-lg-5 ">
               <h2 className="display-5">Embrace the Director’s Chair</h2>
               <p>
                 Craft stunning visuals with our state-of-the-art videography
@@ -92,69 +98,74 @@ const Hero = () => {
                 </a>
               </div>
             </div>
-            <Sidediv className="col-lg-5 offset-lg-1 p-0 text-light">
-              <Masonry columns={{ xs: 1, sm: 1, md: 2, lg: 2 }} spacing={2}>
-                {loading ? (
-                  <>
-                    {[...Array(6)].map((item, index) => (
-                      <Skeleton
-                        key={index}
-                        sx={{ bgcolor: "gray.900" }}
-                        variant="rectangular"
-                        minwidth={110}
-                        height={200}
-                      />
-                    ))}
-                  </>
-                ) : (
-                  <>
-                    {data?.map((item, index) => (
+            {mediaWidth && (
+              <Sidediv className="col-xl-5 col-lg-6 offset-lg-1 p-0 text-light">
+                <Masonry columns={{ xs: 1, sm: 1, md: 2, lg: 2 }} spacing={2}>
+                  {loading ? (
+                    <>
+                      {[...Array(6)].map((item, index) => (
+                        <Skeleton
+                          key={index}
+                          sx={{ bgcolor: "gray.900" }}
+                          variant="rectangular"
+                          minwidth={110}
+                          height={200}
+                        />
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      {data?.map((item, index) => (
+                        <div
+                          key={item.id}
+                          className="card"
+                          style={{
+                            backgroundColor: "#131e2533",
+                            border: "none",
+                          }}
+                        >
+                          <div className="card-body">
+                            <div className="card-img-actions">
+                              <Player
+                                type={"video/mp4"}
+                                videoJsOptions={{
+                                  autoplay: false,
+                                  controls: true,
+                                  preload: "auto",
+                                  responsive: true,
+                                  fluid: true,
+                                  sources: [
+                                    {
+                                      src: item.videoUrl,
+                                      type: "video/mp4",
+                                    },
+                                  ],
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+
                       <div
-                        key={item.id}
                         className="card"
                         style={{ backgroundColor: "#131e2533", border: "none" }}
                       >
                         <div className="card-body">
                           <div className="card-img-actions">
-                            <Player
-                              type={"video/mp4"}
-                              videoJsOptions={{
-                                autoplay: false,
-                                controls: true,
-                                preload: "auto",
-                                responsive: true,
-                                fluid: true,
-                                sources: [
-                                  {
-                                    src: item.videoUrl,
-                                    type: "video/mp4",
-                                  },
-                                ],
-                              }}
-                            />
+                            <div className="d-grid gap-2 d-md-flex mt-2 justify-content-md-start mb-4 mb-lg-3">
+                              <a href="#" className="primary-btn">
+                                See More
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    ))}
-
-                    <div
-                      className="card"
-                      style={{ backgroundColor: "#131e2533", border: "none" }}
-                    >
-                      <div className="card-body">
-                        <div className="card-img-actions">
-                          <div className="d-grid gap-2 d-md-flex mt-2 justify-content-md-start mb-4 mb-lg-3">
-                            <a href="#" className="primary-btn">
-                              See More
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </Masonry>
-            </Sidediv>
+                    </>
+                  )}
+                </Masonry>
+              </Sidediv>
+            )}
           </div>
         </div>
       </section>
