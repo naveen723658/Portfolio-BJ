@@ -77,7 +77,7 @@ const Portfolio = ({ docID }) => {
                       videoJsOptions={{
                         autoplay: false,
                         controls: true,
-                        preload: "none",
+                        preload: "auto",
                         responsive: true,
                         fluid: true,
                         sources: [

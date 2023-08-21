@@ -1,18 +1,33 @@
-const About = () => {
+import "swiper/css";
+import "swiper/css/effect-cards";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { EffectCards } from "swiper/modules";
+import Image from "next/image";
+import Link from "next/link";
+const About = (props) => {
+  const { aboutimages, loading = true } = props.props;
   return (
-    <section
-      className="py-4 my-4"
-      // style={{
-      //   background:
-      //     "radial-gradient(circle at -8.9% 51.2%, rgb(255, 124, 0) 0%, rgb(255, 124, 0) 15.9%, rgb(255, 163, 77) 15.9%, rgb(255, 163, 77) 24.4%, rgb(19, 30, 37) 24.5%, rgb(19, 30, 37) 66% ",
-      // }}
-    >
+    <section className="py-4 my-4" id="about">
       <div className="container">
         <div className="row">
           <div className="col-lg-6">
-            <div className="about__img">
-              <img src="/img/about/about.jpg" alt="" />
-            </div>
+            <Swiper
+              effect={"cards"}
+              grabCursor={true}
+              modules={[EffectCards]}
+              className="mySwiper"
+            >
+              {aboutimages?.map((item, index) => (
+                <SwiperSlide key={item.id}>
+                  <Image
+                    src={item.downloadURL}
+                    alt="Picture of the author"
+                    width={390}
+                    height={500}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </div>
           <div className="col-lg-6">
             <div className="about__text">
@@ -35,9 +50,9 @@ const About = () => {
                 pleasure and praisi pain was born and will give complete account
                 of the system pound actual teachings
               </p>
-              <a href="#" className="primary-btn">
+              <Link href="/Portfolio" className="primary-btn">
                 View My Work
-              </a>
+              </Link>
             </div>
           </div>
         </div>

@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Iconify from "@/hooks/iconify/index";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [mediaWidth, setMediaWidth] = useState(0);
+
   const navContainer = {
     visible: {
       //x: 0,
@@ -58,22 +58,7 @@ const Navbar = () => {
     },
   };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setMediaWidth(window.innerWidth);
-    };
-
-    // Initial width on component mount
-    setMediaWidth(window.innerWidth);
-
-    // Listen for window resize events
-    window.addEventListener("resize", handleResize);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const mediaWidth = useMediaQuery("(min-width:991.5px)");
   return (
     <header className="header" style={{ position: "relative" }}>
       <div className="container">
@@ -86,7 +71,7 @@ const Navbar = () => {
             </div>
           </div>
           <div className="col-lg-10 col-1" style={{ position: "relative" }}>
-            {mediaWidth > 991.5 && (
+            {mediaWidth && (
               <div className="header__nav__option">
                 <nav className="header__nav__menu">
                   <ul>
@@ -94,17 +79,17 @@ const Navbar = () => {
                       <Link href="/">Home</Link>
                     </li>
                     <li>
-                      <Link href="#about">About</Link>
+                      <a href="#about">About</a>
                     </li>
                     <li>
                       <Link href="/Portfolio">Portfolio</Link>
                     </li>
                     <li>
-                      <Link href="/">Services</Link>
+                      <a href="#Services">Services</a>
                     </li>
 
                     <li>
-                      <Link href="/">Contact</Link>
+                      <a href="#Contact">Contact</a>
                     </li>
                   </ul>
                 </nav>
@@ -137,7 +122,7 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-      {mediaWidth < 991.5 && isOpen && (
+      {!mediaWidth && isOpen && (
         <AnimatePresence>
           <motion.div
             className="navbar header__nav__menu mobile-menu"

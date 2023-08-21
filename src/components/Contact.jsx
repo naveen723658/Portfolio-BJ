@@ -3,7 +3,7 @@ import Iconify from "@/hooks/iconify/Iconify";
 const Contact = () => {
   return (
     <div>
-      <section className="contact-widget spad">
+      <section className="contact-widget spad" id="Contact">
         <div className="container">
           <div className="row">
             <div className="col-lg-4 col-md-6 col-md-6 col-md-3">
