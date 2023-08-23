@@ -1,6 +1,4 @@
 import dynamic from "next/dynamic";
-import Loading, { SkeletonHero, SkeletonOne } from "@/hooks/Loading";
-import Navbar from "@/components/Navbar";
 import Counter from "@/components/Counter";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";

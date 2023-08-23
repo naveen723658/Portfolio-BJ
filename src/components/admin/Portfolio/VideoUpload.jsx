@@ -32,7 +32,11 @@ import db from "@/firebase/firestore";
 import auth from "@/firebase/auth";
 import { useAuthContext } from "@/context/AuthContext";
 import { useFetchAllImagesMeta } from "@/hooks/Firebase/fetchdata";
-// import { getVideoDetailsAndThumbnail } from "@/hooks/videometa";
+import {
+  generateVideoThumbnails,
+  getVideoDurationFromVideoFile,
+  importFileandPreview,
+} from "@/hooks/videometa/VideoMeta";
 async function NewImage(file, setData, id) {
   const docRef = await addDoc(
     collection(doc(db, "/Data/Portfolio/"), "Images"),
@@ -130,9 +134,6 @@ export default function VideoUpload() {
   const [video, setVideo] = useState([]);
   const [imageMeta, loading] = useFetchAllImagesMeta("Oceedee Campaign Shoot/");
   const [temp, setTemp] = useState();
-  // getVideoDetailsAndThumbnail(
-  //   "https://firebasestorage.googleapis.com/v0/b/brijesh-kumar-96397.appspot.com/o/Infrastructure%20and%20Property%20Shoot%2FCottage%201_3.mp4?alt=media&token=b1a97dd5-5be5-41f8-8889-5fbe02b9f63a"
-  // );
   useEffect(() => {
     async function getvideo() {
       const videoRef = collection(db, "/Data/Portfolio/", "video");
@@ -142,6 +143,37 @@ export default function VideoUpload() {
     }
     getvideo();
   }, []);
+
+function base64ToBlob(base64Data) {
+  const byteCharacters = atob(base64Data.split(",")[1]);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+    const slice = byteCharacters.slice(offset, offset + 512);
+
+    const byteNumbers = new Array(slice.length);
+    for (let i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+
+  return new Blob(byteArrays, { type: "image/jpeg" }); // Adjust the 'type' accordingly
+}
+
+function generateBlobURL(blob) {
+  return URL.createObjectURL(blob);
+}
+async function ThumbnailUploader(file) {
+  // const duration = await getVideoDurationFromVideoFile(file);
+
+  const thumbnailArray = await generateVideoThumbnails(file, 1, "url");
+  const blobURLs = thumbnailArray.map(base64ToBlob).map(generateBlobURL);
+
+  console.log(blobURLs); 
+}
   return (
     <>
       <Container>
@@ -168,13 +200,10 @@ export default function VideoUpload() {
               hidden
               onChange={(ev) => {
                 if (ev.target.files.length > 0) {
-                    let file = ev.target.files[0];
-                    
-                    setTemp(URL.createObjectURL(file));
-                    console.log(URL.createObjectURL(file));
-                  //   Array.from(ev.target.files).forEach((file) => {
-                  //     NewImage(file, setImages);
-                  //   });
+                  let file = ev.target.files[0];
+
+                  // setTemp(URL.createObjectURL(file));
+                  ThumbnailUploader(file);
                 }
               }}
             />
