@@ -144,35 +144,13 @@ export default function VideoUpload() {
     getvideo();
   }, []);
 
-function base64ToBlob(base64Data) {
-  const byteCharacters = atob(base64Data.split(",")[1]);
-  const byteArrays = [];
 
-  for (let offset = 0; offset < byteCharacters.length; offset += 512) {
-    const slice = byteCharacters.slice(offset, offset + 512);
-
-    const byteNumbers = new Array(slice.length);
-    for (let i = 0; i < slice.length; i++) {
-      byteNumbers[i] = slice.charCodeAt(i);
-    }
-
-    const byteArray = new Uint8Array(byteNumbers);
-    byteArrays.push(byteArray);
-  }
-
-  return new Blob(byteArrays, { type: "image/jpeg" }); // Adjust the 'type' accordingly
-}
-
-function generateBlobURL(blob) {
-  return URL.createObjectURL(blob);
-}
 async function ThumbnailUploader(file) {
   // const duration = await getVideoDurationFromVideoFile(file);
 
   const thumbnailArray = await generateVideoThumbnails(file, 1, "url");
-  const blobURLs = thumbnailArray.map(base64ToBlob).map(generateBlobURL);
 
-  console.log(blobURLs); 
+  console.log(thumbnailArray); 
 }
   return (
     <>

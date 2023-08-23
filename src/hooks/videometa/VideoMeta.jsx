@@ -146,9 +146,15 @@ const getVideoCover = (urlOfFIle, seekTo = 0) => {
             (blob) => {
               var reader = new FileReader();
               reader.readAsDataURL(blob);
-              reader.onloadend = function () {
-                var base64data = reader.result;
-                resolve(base64data);
+              reader.onloadend = async function () {
+                var videourl = await base64ToBlob(reader.result)
+                var videometa = {
+                  thumbnailUrl: videourl,
+                  width: canvas.width,
+                  height: canvas.height,
+                  aspectRatio: canvas.width / canvas.height,
+                };
+                resolve(videometa);
               };
             },
             "image/jpeg",
@@ -162,6 +168,30 @@ const getVideoCover = (urlOfFIle, seekTo = 0) => {
   });
 };
 exports.getVideoCover = getVideoCover;
+const base64ToBlob = async (base64Data) => {
+  try {
+    const byteCharacters = atob(base64Data.split(",")[1]);
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, { type: "image/jpeg" }); // Adjust the 'type' accordingly
+    return URL.createObjectURL(blob);
+  } catch (error) {
+    console.error("Error converting base64 to blob:", error);
+    return null;
+  }
+};
 const generateVideoThumbnailViaUrl = (urlOfFIle, videoTimeInSeconds) => {
   return new Promise((resolve, reject) => {
     try {
