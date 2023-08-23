@@ -106,6 +106,12 @@ const Hero = (props) => {
                                   preload: "auto",
                                   responsive: true,
                                   fluid: true,
+                                  poster: item.thumbnailUrl
+                                    ? item.thumbnailUrl
+                                    : null,
+                                  aspectRatio: item.aspectRatio
+                                    ? item.aspectRatio
+                                    : "16:9",
                                   sources: [
                                     {
                                       src: item.videoUrl,

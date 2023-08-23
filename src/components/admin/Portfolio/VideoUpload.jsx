@@ -145,7 +145,7 @@ export default function VideoUpload() {
 
 
 async function ThumbnailUploader(file) {
-  const thumbnailArray = await generateVideoThumbnails(file, 1);
+  const thumbnailArray = await generateVideoThumbnailViaUrl(file);
 
   console.log(thumbnailArray); 
 }
@@ -178,7 +178,9 @@ async function ThumbnailUploader(file) {
                   let file = ev.target.files[0];
 
                   // setTemp(URL.createObjectURL(file));
-                  ThumbnailUploader(file);
+                  ThumbnailUploader(
+                    "https://firebasestorage.googleapis.com/v0/b/brijesh-kumar-96397.appspot.com/o/Miscellaneous%20Shoot%20%26%20Edit%2FEx_2.mp4?alt=media&token=8cd28812-ea61-44e6-bef4-ebb6a75696a8"
+                  );
                 }
               }}
             />

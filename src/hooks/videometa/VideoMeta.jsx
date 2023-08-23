@@ -140,6 +140,7 @@ const getVideoCover = (urlOfFIle, seekTo = 0) => {
           const canvas = document.createElement("canvas");
           canvas.width = videoPlayer.videoWidth;
           canvas.height = videoPlayer.videoHeight;
+
           const ctx = canvas.getContext("2d");
           ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
           ctx.canvas.toBlob(
@@ -148,11 +149,12 @@ const getVideoCover = (urlOfFIle, seekTo = 0) => {
               reader.readAsDataURL(blob);
               reader.onloadend = async function () {
                 var videourl = await base64ToBlob(reader.result);
+                var aspectRatio = fraction(canvas.width / canvas.height);
                 var videometa = {
                   thumbnailUrl: videourl,
                   width: canvas.width,
                   height: canvas.height,
-                  aspectRatio: canvas.width / canvas.height,
+                  aspectRatio: aspectRatio,
                 };
                 resolve(videometa);
               };
@@ -167,6 +169,23 @@ const getVideoCover = (urlOfFIle, seekTo = 0) => {
     }
   });
 };
+
+const fraction = (number) => {
+  let letVal = Math.floor(number);
+  let fVal = number - letVal;
+  let pVal = 1000000000;
+  let gcdVal = gcd(Math.round(fVal * pVal), pVal);
+  let num = Math.round(fVal * pVal) / gcdVal;
+  let deno = pVal / gcdVal;
+  return letVal * deno + num + ":" + deno;
+};
+
+function gcd(a, b) {
+  if (a == 0) return b;
+  else if (b == 0) return a;
+  if (a < b) return gcd(a, b % a);
+  else return gcd(b, a % b);
+}
 exports.getVideoCover = getVideoCover;
 const base64ToBlob = async (base64Data) => {
   try {
@@ -224,11 +243,12 @@ const generateVideoThumbnailViaUrl = (urlOfFIle, videoTimeInSeconds = 3) => {
             reader.readAsDataURL(blob);
             reader.onloadend = async function () {
               var videourl = await base64ToBlob(reader.result);
+              var aspectRatio = fraction(canvas.width / canvas.height);
               var videometa = {
                 thumbnailUrl: videourl,
                 width: canvas.width,
                 height: canvas.height,
-                aspectRatio: canvas.width / canvas.height,
+                aspectRatio: aspectRatio
               };
               resolve(videometa);
             };
