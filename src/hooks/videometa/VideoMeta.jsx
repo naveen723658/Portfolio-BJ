@@ -123,7 +123,7 @@ const getVideoCover = (urlOfFIle, seekTo = 0) => {
     try {
       const videoPlayer = document.createElement("video");
       videoPlayer.setAttribute("src", urlOfFIle);
-      videoPlayer.crossOrigin = "Anonymous";
+      videoPlayer.crossOrigin = "cors";
       videoPlayer.load();
       videoPlayer.addEventListener("error", (ex) => {
         reject(`error when loading video file ${ex}`);
@@ -147,7 +147,7 @@ const getVideoCover = (urlOfFIle, seekTo = 0) => {
               var reader = new FileReader();
               reader.readAsDataURL(blob);
               reader.onloadend = async function () {
-                var videourl = await base64ToBlob(reader.result)
+                var videourl = await base64ToBlob(reader.result);
                 var videometa = {
                   thumbnailUrl: videourl,
                   width: canvas.width,
@@ -192,7 +192,7 @@ const base64ToBlob = async (base64Data) => {
     return null;
   }
 };
-const generateVideoThumbnailViaUrl = (urlOfFIle, videoTimeInSeconds) => {
+const generateVideoThumbnailViaUrl = (urlOfFIle, videoTimeInSeconds = 3) => {
   return new Promise((resolve, reject) => {
     try {
       var video = document.createElement("video");
@@ -222,9 +222,15 @@ const generateVideoThumbnailViaUrl = (urlOfFIle, videoTimeInSeconds) => {
           (blob) => {
             var reader = new FileReader();
             reader.readAsDataURL(blob);
-            reader.onloadend = function () {
-              var base64data = reader.result;
-              resolve(base64data);
+            reader.onloadend = async function () {
+              var videourl = await base64ToBlob(reader.result);
+              var videometa = {
+                thumbnailUrl: videourl,
+                width: canvas.width,
+                height: canvas.height,
+                aspectRatio: canvas.width / canvas.height,
+              };
+              resolve(videometa);
             };
           },
           "image/jpeg",
@@ -243,7 +249,7 @@ const generateVideoThumbnailViaUrl = (urlOfFIle, videoTimeInSeconds) => {
       video.src = urlOfFIle;
       video.muted = true;
       video.playsInline = true;
-      video.crossOrigin = "Anonymous";
+      video.crossOrigin = "cors";
       video.currentTime = videoTimeInSeconds;
       video
         .play()
@@ -295,16 +301,20 @@ const getVideoDurationFromVideoFile = (videoFile) => {
 exports.getVideoDurationFromVideoFile = getVideoDurationFromVideoFile;
 const generateVideoDurationFromUrl = (url) => {
   return new Promise((resolve, reject) => {
-    let video = document.createElement("video");
-    video.addEventListener("loadeddata", function () {
-      resolve(video.duration);
-      window.URL.revokeObjectURL(url);
-    });
-    video.preload = "metadata";
-    video.src = url;
-    video.muted = true;
-    video.crossOrigin = "Anonymous";
-    video.playsInline = true;
-    video.play();
+    try {
+      let video = document.createElement("video");
+      video.addEventListener("loadeddata", function () {
+        resolve(video.duration);
+        window.URL.revokeObjectURL(url);
+      });
+      video.preload = "metadata";
+      video.src = url;
+      video.muted = true;
+      video.crossOrigin = "cors";
+      video.playsInline = true;
+      video.play();
+    } catch (error) {
+      reject(error);
+    }
   });
 };

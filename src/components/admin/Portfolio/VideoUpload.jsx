@@ -34,8 +34,7 @@ import { useAuthContext } from "@/context/AuthContext";
 import { useFetchAllImagesMeta } from "@/hooks/Firebase/fetchdata";
 import {
   generateVideoThumbnails,
-  getVideoDurationFromVideoFile,
-  importFileandPreview,
+  generateVideoThumbnailViaUrl,
 } from "@/hooks/videometa/VideoMeta";
 async function NewImage(file, setData, id) {
   const docRef = await addDoc(
@@ -146,9 +145,7 @@ export default function VideoUpload() {
 
 
 async function ThumbnailUploader(file) {
-  // const duration = await getVideoDurationFromVideoFile(file);
-
-  const thumbnailArray = await generateVideoThumbnails(file, 1, "url");
+  const thumbnailArray = await generateVideoThumbnails(file, 1);
 
   console.log(thumbnailArray); 
 }
