@@ -64,24 +64,25 @@ const PlayModal = ({ src, type, poster, ratio, w, h, open, onClose }) => {
           p: xs || sm ? 2 : 4,
         }}
       >
-        {sm && (
-          <IconButton
-            aria-label="close"
-            sx={{
-              position: "absolute",
-              top: "0.5%",
-              right: "0.5%",
-              zIndex: "1",
-              color: "grey.300",
-            }}
-            onClick={onClose}
-          >
-            <Iconify
-              icon="zondicons:close-solid"
-              sx={{ width: "2rem", height: "2rem" }}
-            />
-          </IconButton>
-        )}
+        {sm ||
+          (xs && (
+            <IconButton
+              aria-label="close"
+              sx={{
+                position: "absolute",
+                top: "0.5%",
+                right: "0.5%",
+                zIndex: "1",
+                color: "grey.300",
+              }}
+              onClick={onClose}
+            >
+              <Iconify
+                icon="zondicons:close-solid"
+                sx={{ width: "2rem", height: "2rem" }}
+              />
+            </IconButton>
+          ))}
 
         <Player src={src} type={type} videoJsOptions={videoJsOptions} />
       </Box>
