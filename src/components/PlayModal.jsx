@@ -60,7 +60,7 @@ const PlayModal = ({ src, type, poster, ratio, w, h, open, onClose }) => {
           border: "none",
           boxShadow: 15,
           outline: 0,
-          p: 4,
+          p: xs || sm ? 2 : 4,
         }}
       >
         <Player src={src} type={type} videoJsOptions={videoJsOptions} />
