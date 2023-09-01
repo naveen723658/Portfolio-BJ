@@ -6,8 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { Pagination, Navigation } from "swiper/modules";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
 const PlayModal = ({ src, type, poster, ratio, w, h, open, onClose }) => {
   const videoJsOptions = {
     autoplay: true,
@@ -23,6 +22,10 @@ const PlayModal = ({ src, type, poster, ratio, w, h, open, onClose }) => {
       },
     ],
   };
+  const lg = useMediaQuery("(min-width:992px)");
+  const md = useMediaQuery("(max-width:992px) and (min-width:768px)");
+  const sm = useMediaQuery("(max-width:768px) and (min-width:478px)");
+  const xs = useMediaQuery("(max-width:478px)");
   return (
     <Modal
       open={open}
@@ -36,7 +39,22 @@ const PlayModal = ({ src, type, poster, ratio, w, h, open, onClose }) => {
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          minWidth: ratio === "9:16" ? "30%" : "80%",
+          minWidth:
+            ratio === "9:16" && lg
+              ? "26rem"
+              : ratio === "9:16" && md
+              ? "22rem"
+              : ratio === "9:16" && sm
+              ? "20rem"
+              : ratio === "9:16" && xs
+              ? "95%"
+              : lg
+              ? "80%"
+              : md
+              ? "85%"
+              : sm
+              ? "90%"
+              : "98%",
           height: "auto",
           bgcolor: "transparent",
           border: "none",
