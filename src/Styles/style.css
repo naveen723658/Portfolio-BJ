@@ -1384,10 +1384,14 @@ ol {
   .work__item.item__1 {
     width: 100%;
   }
-
+  /* .work__item.item__0 {
+    height: 633px !important;
+  } */
+  
   .work__item {
     width: 100%;
     margin-right: 0;
+    margin-bottom: 20px;
   }
 
   .work__item.item__2 {
