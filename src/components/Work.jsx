@@ -14,6 +14,7 @@ import db from "@/firebase/firestore";
 import { Skeleton } from "@mui/material";
 import Masonry from "masonry-layout";
 import Image from "next/image";
+import Link from "next/link";
 const Work = () => {
   const masonryRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
@@ -184,6 +185,13 @@ const Work = () => {
           </>
         )}
       </div>
+      <Link
+        href="/Portfolio"
+        className="primary-btn"
+        style={{ float: "right", marginRight: "1rem", marginTop: "1rem" }}
+      >
+        View more
+      </Link>
       {source && (
         <PlayModal
           src={source.src}

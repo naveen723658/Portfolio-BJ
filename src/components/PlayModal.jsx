@@ -1,12 +1,13 @@
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
+import IconButton from "@mui/material/IconButton";
 import Player from "./Player";
-import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import Iconify from "@/hooks/iconify/Iconify";
 const PlayModal = ({ src, type, poster, ratio, w, h, open, onClose }) => {
   const videoJsOptions = {
     autoplay: true,
@@ -63,6 +64,25 @@ const PlayModal = ({ src, type, poster, ratio, w, h, open, onClose }) => {
           p: xs || sm ? 2 : 4,
         }}
       >
+        {sm && (
+          <IconButton
+            aria-label="close"
+            sx={{
+              position: "absolute",
+              top: "0.5%",
+              right: "0.5%",
+              zIndex: "1",
+              color: "grey.300",
+            }}
+            onClick={onClose}
+          >
+            <Iconify
+              icon="zondicons:close-solid"
+              sx={{ width: "2rem", height: "2rem" }}
+            />
+          </IconButton>
+        )}
+
         <Player src={src} type={type} videoJsOptions={videoJsOptions} />
       </Box>
     </Modal>

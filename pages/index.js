@@ -20,7 +20,8 @@ export default function Page() {
       <Hero />
       <One />
       <About />
-      <DynamicWork />
+
+      <DynamicWork /> {/* Work component is ready */}
       <Services />
       <Reels />
       {/* <Counter /> */}
