@@ -5,9 +5,10 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import Link from "next/link";
 
 export default function VideoCard(option) {
-    const { item, key, loading = true } = option.option;
+  const { item, key, loading = true } = option.option;
 
   return (
     <Card sx={{ maxWidth: 345 }} key={item.id}>
@@ -15,7 +16,7 @@ export default function VideoCard(option) {
         component="img"
         alt="green iguana"
         height="140"
-        image="https://bgupta.vercel.app/_next/image?url=https%3A%2F%2Ffirebasestorage.googleapis.com%2Fv0%2Fb%2Fbrijesh-kumar-96397.appspot.com%2Fo%2FImages%252FLyhFEvnCELMogCPoocpA%3Falt%3Dmedia%26token%3D115ef18a-5984-4976-844f-db8bdd16a72b&w=640&q=75"
+        image={item?.thumbnailUrl}
       />
       <CardContent>
         <Typography gutterBottom variant="h6" component="div">
@@ -23,7 +24,7 @@ export default function VideoCard(option) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Edit</Button>
+        <Link href={`/admin/video/edit/${item.id}`}>Edit</Link>
         <Button size="small">Delete</Button>
       </CardActions>
     </Card>

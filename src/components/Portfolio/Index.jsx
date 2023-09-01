@@ -77,9 +77,13 @@ const Portfolio = ({ docID }) => {
                       videoJsOptions={{
                         autoplay: false,
                         controls: true,
-                        preload: "auto",
+                        preload: "none",
                         responsive: true,
                         fluid: true,
+                        poster: item.thumbnailUrl ? item.thumbnailUrl : null,
+                        aspectRatio: item.aspectRatio
+                          ? item.aspectRatio
+                          : "16:9",
                         sources: [
                           {
                             src: item.videoUrl,

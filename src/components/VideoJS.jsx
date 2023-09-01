@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React, { useRef, useEffect } from "react";
 import videojs from "video.js";
 import "video.js/dist/video-js.css";
@@ -12,11 +13,10 @@ export const VideoJS = (props) => {
       const videoElement = document.createElement("video");
       videoElement.classList.add("video-js");
       videoElement.classList.add("vjs-big-play-centered", "vjs-custom");
-
       videoRef.current.appendChild(videoElement);
 
       const player = (playerRef.current = videojs(videoElement, options, () => {
-        videojs.log("player is ready");
+        // videojs.log("player is ready");
         onReady && onReady(player);
       }));
 
@@ -28,7 +28,6 @@ export const VideoJS = (props) => {
       // You can add the thumbnails configuration directly to the player options
     } else {
       const player = playerRef.current;
-
       player.autoplay(options.autoplay);
       player.src(options.sources);
       if (options.poster) {
@@ -39,7 +38,6 @@ export const VideoJS = (props) => {
 
   useEffect(() => {
     const player = playerRef.current;
-
     return () => {
       if (player && !player.isDisposed()) {
         player.dispose();

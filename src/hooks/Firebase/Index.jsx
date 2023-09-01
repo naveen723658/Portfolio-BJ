@@ -12,8 +12,8 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import storage from "../../../utils/firebase/storage";
-import db from "../../../utils/firebase/firestore";
+import storage from "@/firebase/storage";
+import db from "@/firebase/firestore";
 
 // call this function when you have to perform the delete
 export const processAndDelete = async (dataref, docid, setSnackbarStatus) => {
@@ -150,7 +150,7 @@ const processObject = async (obj, storageref, data) => {
           typeof obj[key] === "string" &&
           obj[key].startsWith("blob:")
         ) {
-          if (data && data[key].includes("firebasestorage")) {
+          if (data && data[key]?.includes("firebasestorage")) {
             let { success } = await deleteImage(data[key]);
           }
           let { success, downloadURL } = await UploadFile(obj[key], storageref);
@@ -165,7 +165,7 @@ const processObject = async (obj, storageref, data) => {
   return obj;
 };
 
-const UploadFile = (bloburl, storageref) => {
+export const UploadFile = (bloburl, storageref) => {
   return new Promise((resolve, reject) => {
     if (bloburl.startsWith("blob:")) {
       fetch(bloburl)
@@ -221,7 +221,7 @@ const UploadFile = (bloburl, storageref) => {
   });
 };
 
-const uploadData = async (data, dataref, id, setSnackbarStatus) => {
+export const uploadData = async (data, dataref, id, setSnackbarStatus) => {
   try {
     let newID = "";
     if (id === "new") {
@@ -421,4 +421,3 @@ const deletefunc = async (dataref, docid, setSnackbarStatus) => {
     return error.message;
   }
 };
-

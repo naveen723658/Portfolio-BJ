@@ -2,49 +2,106 @@ import Image from "next/image";
 import Player from "./Player";
 import Iconify from "@/hooks/iconify/Iconify";
 import { motion } from "framer-motion";
-const One = (props) => {
-  const { loopVideoData, loading = true } = props.props;
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  limit,
+  orderBy,
+} from "firebase/firestore";
+import db from "@/firebase/firestore";
+import { Skeleton, Box, CircularProgress } from "@mui/material";
+import { useState, useEffect } from "react";
+const One = () => {
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    async function getData() {
+      setLoading(true);
+      try {
+        const collectionRef = collection(db, "/Data/Portfolio/video");
+        const q = query(
+          collectionRef,
+          where("LoopVideo", "==", true),
+          orderBy("Date", "desc"),
+          limit(1)
+        );
+        const querySnapshot = await getDocs(q);
+        const temp = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setData(temp);
+        setLoading(false);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getData();
+  }, []);
   return (
     <>
-      {loopVideoData && (
-        <section
-          className="One py-4"
-          style={{
-            background: "#131e25",
-          }}
-        >
-          <div style={{ position: "relative" }}>
-            <Player
-              type={"video/mp4"}
-              videoJsOptions={{
-                autoplay: false,
-                controls: true,
-                preload: "auto",
-                responsive: true,
-                fluid: true,
-                sources: [
-                  {
-                    src: loopVideoData[0].videoUrl,
-                    type: "video/mp4",
-                  },
-                ],
+      <section
+        className="One py-4"
+        style={{
+          background: "#131e25",
+        }}
+      >
+        {loading ? (
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              position: "relative",
+            }}
+          >
+            <Skeleton
+              sx={{
+                bgcolor: "#414141",
+                width: "100%",
+                height: "80vh",
+                border: 0,
               }}
+              variant="rectangular"
             />
-            {/* <motion.span
-              className="play-btn video-popup"
-              id="vjs-big-play-button"
-              whileHover={{ scale: null }}
-              animate={{ scale: [null, 1.2, 1.1, 1] }}
-              transition={{ ease: "linear", duration: 2, repeat: Infinity }}
-              style={{ translate: "-50% -50%", cursor: "pointer" }}
+            <Box
+              sx={{
+                display: "flex",
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+              }}
             >
-              <span className="inner-circle">
-                <Iconify icon="mingcute:play-fill" />
-              </span>
-            </motion.span> */}
-          </div>
-        </section>
-      )}
+              <CircularProgress />
+            </Box>
+          </Box>
+        ) : (
+          <>
+            <div style={{ position: "relative" }}>
+              <Player
+                type={"video/mp4"}
+                videoJsOptions={{
+                  autoplay: false,
+                  controls: true,
+                  preload: "auto",
+                  responsive: true,
+                  fluid: true,
+                  poster: data[0]?.thumbnailUrl ? data[0]?.thumbnailUrl : null,
+                  sources: [
+                    {
+                      src: data[0]?.videoUrl,
+                      type: "video/mp4",
+                    },
+                  ],
+                }}
+              />
+            </div>
+          </>
+        )}
+      </section>
     </>
   );
 };

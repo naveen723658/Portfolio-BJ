@@ -1,39 +1,25 @@
-import "swiper/css";
-import "swiper/css/effect-cards";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCards } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
-const About = (props) => {
-  const { aboutimages, loading = true } = props.props;
+const About = () => {
   return (
     <section className="py-4 my-4" id="about">
       <div className="container">
         <div className="row">
           <div className="col-lg-6">
-            <Swiper
-              effect={"cards"}
-              grabCursor={true}
-              modules={[EffectCards]}
-              className="mySwiper"
-            >
-              {aboutimages?.map((item, index) => (
-                <SwiperSlide key={item.id}>
-                  <Image
-                    src={item.downloadURL}
-                    alt="Picture of the author"
-                    width={390}
-                    height={500}
-                  />
-                </SwiperSlide>
-              ))}
-            </Swiper>
+            <Image
+              src={
+                "https://firebasestorage.googleapis.com/v0/b/brijesh-kumar-96397.appspot.com/o/thumbnails%2F862bb351-9ce7-4d5b-8285-e990fdcb6f79.jpeg?alt=media&token=15895373-d41d-4a65-bbbb-4b8e48985c9bg"
+              }
+              alt="about"
+              width={350}
+              height={500}
+            />
           </div>
           <div className="col-lg-6">
             <div className="about__text">
               <div className="section-title">
-                <span>About Me</span>
-                <h2>introduce about My Films history</h2>
+                <span>Get to know me</span>
+                <h2>So, Who Am I?</h2>
               </div>
               <p>
                 But must explain to you how all this mistaken idea denoun cin

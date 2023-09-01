@@ -51,10 +51,7 @@ import db from "@/firebase/firestore";
 import auth from "@/firebase/auth";
 import { useAuthContext } from "@/context/AuthContext";
 import { useFetchAllImagesMeta } from "@/hooks/Firebase/fetchdata";
-import {
-  generateVideoThumbnails,
-  generateVideoThumbnailViaUrl,
-} from "@/hooks/videometa/VideoMeta";
+
 import Scrollbar from "../../scrollbar/Scrollbar";
 import VideoCard from "./VideoCard";
 const style = {
@@ -111,7 +108,7 @@ export default function VideoUpload() {
     };
     const fetchdata = async () => {
       const videoRef = collection(db, "/Data/Portfolio/video");
-      const q = query(videoRef, limit(20));
+      const q = query(videoRef);
       const querySnapshot = await getDocs(q);
       const temp = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -125,9 +122,7 @@ export default function VideoUpload() {
 
   // for video input
   const [videos, setVideos] = useState([]);
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+
   return (
     <>
       <Container>
@@ -194,7 +189,10 @@ export default function VideoUpload() {
           >
             <Box sx={{ width: "100%", minHeight: 829 }}>
               <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 4 }} spacing={2}>
-                {data.length > 0 && data.map((item, index) => <VideoCard option={{item: item, key: index}} />)}
+                {data.length > 0 &&
+                  data.map((item, index) => (
+                    <VideoCard option={{ item: item, key: index }} />
+                  ))}
               </Masonry>
             </Box>
           </Scrollbar>

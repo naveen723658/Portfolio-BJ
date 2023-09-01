@@ -1,17 +1,23 @@
-import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
-import Masonry from "masonry-layout";
-import { useFetchAllImagesMeta } from "@/hooks/firebase";
-import Player from "./Player";
+import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
 import PlayModal from "./PlayModal";
 import Iconify from "@/hooks/iconify/Iconify";
 import { motion } from "framer-motion";
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  limit,
+  orderBy,
+} from "firebase/firestore";
+import db from "@/firebase/firestore";
+import { Skeleton } from "@mui/material";
+import Masonry from "masonry-layout";
+import Image from "next/image";
 const Work = () => {
   const masonryRef = useRef(null);
   const [openModal, setOpenModal] = useState(false);
-  const [source, setSource] = useState({
-    src: "",
-    type: "",
-  });
+  const [source, setSource] = useState();
   const handlePlay = () => {
     setOpenModal(true);
   };
@@ -20,102 +26,176 @@ const Work = () => {
     setOpenModal(false);
   };
 
-  const [imageMeta, loading] = useFetchAllImagesMeta(`DCC Animal Hospital/`);
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    async function getData() {
+      setLoading(true);
+      try {
+        const collectionRef = collection(db, "/Data/Portfolio/video");
+        const q = query(
+          collectionRef,
+          where("aspectRatio", "==", "888888889:500000000"),
+          orderBy("Date", "desc"),
+          limit(4)
+        );
+        const q1 = query(
+          collectionRef,
+          where("aspectRatio", "==", "9:16"),
+          orderBy("Date", "desc"),
+          limit(10)
+        );
 
-  // useEffect(() => {
-  //   console.log(imageMeta);
-  // }, [imageMeta]);
+        const querySnapshot1 = await getDocs(q);
+        const querySnapshot2 = await getDocs(q1);
+
+        const temp1 = querySnapshot1.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        const temp2 = querySnapshot2.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        // Combine the data from both queries
+        const combinedData = [...temp1, ...temp2];
+        const order = orderData(combinedData);
+        setData(order);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getData();
+  }, []);
+
   useLayoutEffect(() => {
     const masonry = new Masonry(masonryRef.current, {
       itemSelector: ".work__item",
       columnWidth: ".grid-sizer",
       gutter: 10,
     });
-    setBackgroundImages();
-  }, []);
+  }, [data]);
 
-  const setBackgroundImages = () => {
-    const elements = document.querySelectorAll(".set-bg");
-    elements.forEach((element) => {
-      const bg = element.getAttribute("data-setbg");
-      element.style.backgroundImage = `url(${bg})`;
+  const orderData = (data) => {
+    let temp = [...data];
+    let orderedPositions = [0, 6, 10, 11]; // Specify the ordered positions
+    const targetAspectRatio = "888888889:500000000";
+
+    const targetItems = [];
+    const otherItems = [];
+
+    temp.forEach((item) => {
+      if (item.aspectRatio === targetAspectRatio) {
+        targetItems.push(item);
+      } else {
+        otherItems.push(item);
+      }
     });
+    orderedPositions.forEach((position, index) => {
+      let t;
+      if (index < targetItems.length) {
+        t = temp[position];
+        temp[position] = targetItems[index];
+        temp[index] = t;
+      }
+    });
+
+    return temp;
   };
-  const galleryItems = [
-    {
-      id: 1,
-      videoUrl: "https://shorturl.at/lBPU7",
-      imageUrl: "img/portfolio/infra_img.png",
-    },
-    {
-      id: 2,
-      videoUrl: "https://shorturl.at/dmzR0",
-      imageUrl: "img/work/kohinor.png",
-    },
-    {
-      id: 3,
-      videoUrl: "https://shorturl.at/ahDMY",
-      imageUrl: "img/work/label.png",
-    },
-    {
-      id: 4,
-      videoUrl: "https://shorturl.at/fAKTW",
-      imageUrl: "img/work/ad2.png",
-    },
-    {
-      id: 5,
-      videoUrl: "https://shorturl.at/oxBG6",
-      imageUrl: "img/work/oceedee.png",
-    },
-    {
-      id: 6,
-      videoUrl: "https://shorturl.at/bmpE8",
-      imageUrl: "img/work/oceedee2.png",
-    },
-    {
-      id: 7,
-      videoUrl: "https://shorturl.at/bnU37",
-      imageUrl: "img/work/next.png",
-    },
-    // Add more items as needed
-  ];
 
   return (
     <section className="work">
       <div className="work__gallery" ref={masonryRef}>
         <div className="grid-sizer"></div>
-        {galleryItems.map((item, key) => (
-          <motion.div
-            key={item.id}
-            className={`work__item item__${
-              key === 0 ? 1 : key === 3 ? 2 : key === 6 ? 1 : key === 9 ? 2 : 0
-            } set-bg box`}
-            data-setbg={`${item.imageUrl}`}
-            whileHover={{ scale: [null, 1, 0.9] }}
-            transition={{ duration: 0.5 }}
-          >
-            <motion.div
-              whileHover={{ scale: null }}
-              animate={{ scale: [null, 1.3, 1.2, 1.1, 1] }}
-              transition={{ ease: "linear", duration: 2, repeat: Infinity }}
-              onClick={() => (
-                handlePlay(),
-                setSource({ src: item.videoUrl, type: "video/mp4" })
-              )}
-              style={{ cursor: "pointer" }}
-              className="play-btn video-popup box"
+        {loading ? (
+          [...Array(14)].map((item, key) => (
+            <div
+              key={key}
+              className={`work__item item__${
+                key === 0 || key === 6 || key === 10 || key === 11
+                  ? 1
+                  : key === 3 || key === 9
+                  ? 2
+                  : 0
+              }`}
             >
-              <Iconify icon="mingcute:play-fill" />
-            </motion.div>
-          </motion.div>
-        ))}
+              <Skeleton
+                sx={{ bgcolor: "grey" }}
+                variant="rectangular"
+                width={"100%"}
+                height={"100%"}
+              />
+            </div>
+          ))
+        ) : (
+          <>
+            {data?.map((item, key) => (
+              <motion.div
+                key={item.id}
+                className={`work__item item__${
+                  key === 0 || key === 6 || key === 10 || key === 11
+                    ? 1
+                    : key === 3 || key === 9
+                    ? 2
+                    : 0
+                }`}
+                whileHover={{ scale: [null, 1, 0.9] }}
+                transition={{ duration: 0.5 }}
+              >
+                <Image
+                  src={item.thumbnailUrl}
+                  alt={item.title ? item.title : "video"}
+                  placeholder="blur"
+                  loading="lazy"
+                  fill
+                  sizes="100%"
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                  blurDataURL={item.thumbnailUrl}
+                />
+                <div
+                  onClick={() => (
+                    handlePlay(),
+                    setSource({
+                      src: item.videoUrl,
+                      type: "video/mp4",
+                      aspectRatio: item.aspectRatio,
+                      width: item.width,
+                      thumbnailUrl: item.thumbnailUrl,
+                      height: item.height,
+                    })
+                  )}
+                  style={{
+                    cursor: "pointer",
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    zIndex: "1",
+                  }}
+                  className="play-btn video-popup box"
+                >
+                  <Iconify icon="mingcute:play-fill" />
+                </div>
+              </motion.div>
+            ))}
+          </>
+        )}
       </div>
-      <PlayModal
-        src={source.src}
-        type={source.type}
-        open={openModal}
-        onClose={handleCloseModal}
-      />
+      {source && (
+        <PlayModal
+          src={source.src}
+          type={source.type}
+          poster={source.thumbnailUrl}
+          ratio={source.aspectRatio}
+          w={source.width}
+          h={source.height}
+          open={openModal}
+          onClose={handleCloseModal}
+        />
+      )}
     </section>
   );
 };

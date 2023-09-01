@@ -4,54 +4,19 @@ import "swiper/css";
 import "swiper/css/pagination";
 import { Box } from "@mui/material";
 import Player from "./Player";
-import { useFetchAllImagesMeta } from "@/hooks/firebase";
 import Iconify from "@/hooks/iconify/index";
 import { Pagination, Navigation } from "swiper";
 import { motion } from "framer-motion";
+import { collection, query, where, getDocs, limit } from "firebase/firestore";
+import db from "@/firebase/firestore";
+
 const Reels = () => {
-  const galleryItems = [
-    {
-      id: 1,
-      videoUrl: "https://shorturl.at/lBPU7",
-      imageUrl: "img/portfolio/infra_img.png",
-    },
-    {
-      id: 2,
-      videoUrl: "https://shorturl.at/dmzR0",
-      imageUrl: "img/work/kohinor.png",
-    },
-    {
-      id: 3,
-      videoUrl: "https://shorturl.at/ahDMY",
-      imageUrl: "img/work/label.png",
-    },
-    {
-      id: 4,
-      videoUrl: "https://shorturl.at/fAKTW",
-      imageUrl: "img/work/ad2.png",
-    },
-    {
-      id: 5,
-      videoUrl: "https://shorturl.at/oxBG6",
-      imageUrl: "img/work/oceedee.png",
-    },
-    {
-      id: 6,
-      videoUrl: "https://shorturl.at/bmpE8",
-      imageUrl: "img/work/oceedee2.png",
-    },
-    {
-      id: 7,
-      videoUrl: "https://shorturl.at/bnU37",
-      imageUrl: "img/work/next.png",
-    },
-    // Add more items as needed
-  ];
-  const [imageMeta, loading] = useFetchAllImagesMeta(`Oceedee Campaign Shoot/`);
   const navigationPrevRef = useRef(null);
   const navigationNextRef = useRef(null);
   const swiperRef = useRef(null);
   // SwiperCore.use([Navigation, Pagination]);
+  
+  const { data, loading } = fetcher();
   return (
     <section className="text-light">
       <Box
@@ -105,8 +70,8 @@ const Reels = () => {
           // onSwiper={(swiper) => (swiperRef.current = swiper)}
           className="mySwiper"
         >
-          {imageMeta.map((value, index) => (
-            <SwiperSlide key={index}>
+          {data?.map((value) => (
+            <SwiperSlide key={value.id}>
               <Box sx={{ width: "100%", height: "auto" }}>
                 <Player
                   type={"video/mp4"}
@@ -114,11 +79,13 @@ const Reels = () => {
                     autoplay: false,
                     controls: true,
                     responsive: true,
+                    preload: "none",
                     fluid: true,
-                    aspectRatio: "9:16",
+                    poster: value.thumbnailUrl ? value.thumbnailUrl : null,
+                    aspectRatio: value.aspectRatio ? value.aspectRatio : "9:16",
                     sources: [
                       {
-                        src: value.url,
+                        src: value.videoUrl,
                         type: "video/mp4",
                       },
                     ],
@@ -132,4 +99,30 @@ const Reels = () => {
     </section>
   );
 };
-export default Reels;
+export const fetcher = async () => {
+  let loading = true;
+  try {
+    const collectionRef = collection(db, "/Data/Portfolio/video");
+    const q = query(
+      collectionRef,
+      where("aspectRatio", "==", "9:16"),
+      limit(20)
+    );
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+      Date: "",
+    }));
+    
+    return {
+      props: { data, loading: false }, // Pass the fetched data as props to your component
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      props: { data: [], loading: true }, // Pass the fetched data as props to your component
+    };
+  }
+};
+export default Reels;   
