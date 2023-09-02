@@ -189,6 +189,7 @@ const Work = () => {
         href="/Portfolio"
         className="primary-btn"
         style={{ float: "right", marginRight: "1rem", marginTop: "1rem" }}
+        passHref
       >
         View more
       </Link>

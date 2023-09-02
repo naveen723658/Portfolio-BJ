@@ -1,23 +1,13 @@
 import Layout, { Header, InnerContent } from "./Layout";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
+
 import Masonry from "@mui/lab/Masonry";
-import { styled } from "@mui/material/styles";
 import { useFetchData } from "@/hooks/Firebase/fetchdata";
-import Player from "../Player";
 import { Skeleton } from "@mui/material";
 import Navbar from "../Navbar";
-import React from "react";
-
-const Label = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
-  ...theme.typography.body2,
-  padding: theme.spacing(0.5),
-  textAlign: "center",
-  color: theme.palette.text.secondary,
-  borderBottomLeftRadius: 0,
-  borderBottomRightRadius: 0,
-}));
+import React, { useState } from "react";
+import Image from "next/image";
+import PlayModal from "../PlayModal";
+import Iconify from "@/hooks/iconify/Iconify";
 
 const Portfolio = ({ docID }) => {
   const [data, loading] = useFetchData(
@@ -27,6 +17,16 @@ const Portfolio = ({ docID }) => {
     "category",
     docID ? docID : null
   );
+
+  const [openModal, setOpenModal] = useState(false);
+  const [source, setSource] = useState();
+  const handlePlay = () => {
+    setOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
   return (
     <>
       <div
@@ -71,32 +71,70 @@ const Portfolio = ({ docID }) => {
             ) : (
               <>
                 {data?.map((item) => (
-                  <div key={item.id}>
-                    <Player
-                      type={"video/mp4"}
-                      videoJsOptions={{
-                        autoplay: false,
-                        controls: true,
-                        preload: "none",
-                        responsive: true,
-                        fluid: true,
-                        poster: item.thumbnailUrl ? item.thumbnailUrl : null,
-                        aspectRatio: item.aspectRatio
-                          ? item.aspectRatio
-                          : "16:9",
-                        sources: [
-                          {
-                            src: item.videoUrl,
-                            type: "video/mp4",
-                          },
-                        ],
+                  <div key={item.id} style={{ position: "relative" }}>
+                    <Image
+                      src={item.thumbnailUrl}
+                      alt={item.title ? item.title : "video"}
+                      placeholder="blur"
+                      loading="lazy"
+                      sizes="100%"
+                      width={item.width}
+                      height={item.height}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "cover",
                       }}
+                      blurDataURL={item.thumbnailUrl}
                     />
+                    <div
+                      onClick={() => (
+                        handlePlay(),
+                        setSource({
+                          src: item.videoUrl,
+                          type: "video/mp4",
+                          aspectRatio: item.aspectRatio,
+                          width: item.width,
+                          thumbnailUrl: item.thumbnailUrl,
+                          height: item.height,
+                        })
+                      )}
+                      style={{
+                        cursor: "pointer",
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        zIndex: "1",
+                        color: "#ffff",
+                        borderRadius: "50%",
+                        border: "1px solid #ffff",
+
+                        padding: "1rem",
+                      }}
+                    >
+                      <Iconify
+                        icon="mingcute:play-fill"
+                        sx={{ width: "1.7rem", height: "1.7rem" }}
+                      />
+                    </div>
                   </div>
                 ))}
               </>
             )}
           </Masonry>
+          {source && (
+            <PlayModal
+              src={source.src}
+              type={source.type}
+              poster={source.thumbnailUrl}
+              ratio={source.aspectRatio}
+              w={source.width}
+              h={source.height}
+              open={openModal}
+              onClose={handleCloseModal}
+            />
+          )}
         </InnerContent>
       </Layout>
     </>
