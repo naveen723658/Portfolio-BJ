@@ -122,7 +122,7 @@ const Reels = () => {
             <>
               {data?.map((value) => (
                 <SwiperSlide key={value.id}>
-                  <Box sx={{ width: "100%", height: "auto" }}>
+                  <Box sx={{ width: "100%", height: "auto", borderRadius:"0.5rem", overflow:"hidden" }}>
                     <Player
                       type={"video/mp4"}
                       videoJsOptions={{

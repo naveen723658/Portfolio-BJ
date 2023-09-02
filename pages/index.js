@@ -7,6 +7,7 @@ import Reels from "@/components/Reels";
 import About from "@/components/About";
 import Hero from "@/components/Hero";
 import One from "@/components/One";
+import ImageSection from "@/components/ImageSection";
 
 const DynamicWork = dynamic(() => import("@/components/Work"), {
   ssr: false,
@@ -20,11 +21,11 @@ export default function Page() {
       <Hero />
       <One />
       <About />
-
       <DynamicWork /> {/* Work component is ready */}
       <Services />
       <Reels />
-      {/* <Counter /> */}
+      <Counter />
+      <ImageSection />
       <Contact />
       <Footer />
     </>

@@ -1,25 +1,7 @@
-import Player from "./Player";
 
 const Counter = () => {
   return (
-    <section className="counter w-100 h-auto">
-      {/* <Player
-        type={"video/mp4"}
-        videoJsOptions={{
-          // autoplay: true,
-          controls: false,
-          // loop: true,
-          responsive: true,
-          fluid: true,
-          aspectRatio: "16:9",
-          sources: [
-            {
-              src: "https://firebasestorage.googleapis.com/v0/b/brijesh-kumar-96397.appspot.com/o/Next%20Fashion%20Intro%2F8_2.mp4?alt=media&token=7d1f9b31-f235-4678-9d8d-59a56602f1d7",
-              type: "video/mp4",
-            },
-          ],
-        }}
-      /> */}
+    <section className="counter w-100">
       <div className="container">
         <div className="counter__content">
           <div className="row">
