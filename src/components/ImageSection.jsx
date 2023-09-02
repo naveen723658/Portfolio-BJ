@@ -12,7 +12,9 @@ import {
 import db from "@/firebase/firestore";
 import { Skeleton } from "@mui/material";
 import Image from "next/image";
+
 import useMediaQuery from "@mui/material/useMediaQuery";
+import Link from "next/link";
 const ImageSection = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
@@ -47,7 +49,15 @@ const ImageSection = () => {
       className="text-light my-4 py-4"
       style={{
         position: "relative",
-        height: lg ? "90vh" : md ? "110vh" : sm ? "120vh" : xs ? "auto" : "100vh",
+        height: lg
+          ? "95vh"
+          : md
+          ? "110vh"
+          : sm
+          ? "120vh"
+          : xs
+          ? "auto"
+          : "100vh",
         overflow: "hidden",
       }}
     >
@@ -73,13 +83,28 @@ const ImageSection = () => {
           position: "absolute",
           bottom: -1,
           width: "100%",
-          height: "7vh",
+          p: 2,
           zIndex: 1,
-          //   backgroundColor: "rgb(0 0 0 / 80%)",
-          //   backdropFilter: "blur(50px)",
-          //   boxShadow: "rgb(0 0 0 / 80%) 9px -10px 11px 0px inset}",
+          boxShadow: "rgb(19 30 37) -7px -20px 20px 0px inset",
         }}
-      />
+      >
+        <div
+          style={{
+            float: "right",
+            marginRight: "1rem",
+            marginTop: "1rem",
+            backdropFilter: "blur(50px)",
+            width: "fit-content",
+            padding: `${sm || xs ? "0.5rem" : "1rem"}`,
+          }}
+        >
+          <Link href="/Portfolio" className="primary-btn" sx={{ 
+            fontSize: `${sm || xs ? "0.8rem" : "15px"}`,
+          }}>
+            View more
+          </Link>
+        </div>
+      </Box>
     </section>
   );
 };
