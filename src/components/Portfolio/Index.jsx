@@ -71,7 +71,7 @@ const Portfolio = ({ docID }) => {
             ) : (
               <>
                 {data?.map((item) => (
-                  <div key={item.id} style={{ position: "relative" }}>
+                  <div key={item.id} style={{ position: "relative", backgroundColor:"gray" }}>
                     <Image
                       src={item.thumbnailUrl}
                       alt={item.title ? item.title : "video"}
