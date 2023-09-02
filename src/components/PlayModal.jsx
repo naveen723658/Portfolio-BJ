@@ -33,6 +33,9 @@ const PlayModal = ({ src, type, poster, ratio, w, h, open, onClose }) => {
       onClose={onClose}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
+      sx={{
+        backdropFilter:"blur(25px)"
+      }}
     >
       <Box
         sx={{
