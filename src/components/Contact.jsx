@@ -1,4 +1,5 @@
 import Iconify from "@/hooks/iconify/Iconify";
+import Image from "next/image";
 
 const Contact = () => {
   return (
@@ -48,11 +49,14 @@ const Contact = () => {
           <div className="row">
             <div className="col-lg-6 col-md-6">
               <div className="contact__map">
-                {/* <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d387190.2798902705!2d-74.25986790365917!3d40.697670067823786!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew%20York%2C%20NY%2C%20USA!5e0!3m2!1sen!2sbd!4v1596152431947!5m2!1sen!2sbd"
-                  height={450}
-                  style={{ border: 0 }}
-                /> */}
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d28012.12807121815!2d77.31778388235638!3d28.644264392100045!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfad07ac6ca3d%3A0x4797942eb250fd96!2sVaishali%2C%20Ghaziabad%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1693673738513!5m2!1sen!2sin"
+
+                  style={{ border: 0, height:"100%" , width: "100%" }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
               </div>
             </div>
             <div className="col-lg-6 col-md-6">
