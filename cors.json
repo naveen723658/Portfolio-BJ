@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["http://localhost:3000", "https://bgupta.vercel.app"],
+      "origin": ["http://localhost:3000", "https://bgupta.vercel.app", "https://2amartist.in"],
       "method": ["GET"],
       "responseHeader": ["Content-Type"],
       "maxAgeSeconds": 3600
