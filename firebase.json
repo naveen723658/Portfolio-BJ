@@ -53,7 +53,7 @@
     "singleProjectMode": true
   },
   "hosting": {
-    "source":"*",
+    "public": "out",
     "clearUrls": true,
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "frameworksBackend": {
