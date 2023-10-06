@@ -15,12 +15,8 @@
           "https://bgupta.vercel.app",
           "https://2amartist.in"
         ],
-        "method": [
-          "GET"
-        ],
-        "responseHeader": [
-          "Content-Type"
-        ],
+        "method": ["GET"],
+        "responseHeader": ["Content-Type"],
         "maxAgeSeconds": 3600
       }
     ]
@@ -59,49 +55,10 @@
   "hosting": {
     "public": "out",
     "clearUrls": true,
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "frameworksBackend": {
       "region": "asia-east1"
     },
-    "headers": [
-      {
-        "source": "*",
-        "headers": [
-          {
-            "key": "Access-Control-Allow-Origin",
-            "value": "*"
-          },
-          {
-            "key": "Access-Control-Allow-Headers",
-            "value": "Origin, X-Requested-With, Content-Type, Accept"
-          },
-          {
-            "key": "Content-Security-Policy",
-            "value": "default-src 'self' 'unsafe-inline' cdn.jsdelivr.net us-central1-vips-website-88a23.cloudfunctions.net cdnjs.cloudflare.com *.googleapis.com api.iconify.design translate.google.com *.gstatic.com *.icons8.com *.google.com *.youtube.com *.googletagmanager.com data:"
-          },
-          {
-            "key": "X-Content-Type-Options",
-            "value": "nosniff"
-          },
-          {
-            "key": "X-Frame-Options",
-            "value": "DENY"
-          },
-          {
-            "key": "Cache-Control",
-            "value": "max-age=2592000 'must-revalidate'"
-          },
-          {
-            "key": "Expires",
-            "value": "3600"
-          }
-        ]
-      }
-    ],
     "rewrites": [
       {
         "source": "**",
@@ -119,9 +76,7 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint"
-      ]
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"]
     }
   ]
 }
