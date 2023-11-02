@@ -15,12 +15,8 @@
           "https://bgupta.vercel.app",
           "https://2amartist.in"
         ],
-        "method": [
-          "GET"
-        ],
-        "responseHeader": [
-          "Content-Type"
-        ],
+        "method": ["GET"],
+        "responseHeader": ["Content-Type"],
         "maxAgeSeconds": 3600
       }
     ]
@@ -57,13 +53,9 @@
     "singleProjectMode": true
   },
   "hosting": {
-    "public": "out",
+    "source": ".",
     "clearUrls": true,
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "frameworksBackend": {
       "region": "asia-east1"
     },
@@ -119,9 +111,7 @@
         "firebase-debug.log",
         "firebase-debug.*.log"
       ],
-      "predeploy": [
-        "npm --prefix \"$RESOURCE_DIR\" run lint"
-      ]
+      "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint"]
     }
   ]
 }
