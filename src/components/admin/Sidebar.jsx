@@ -28,13 +28,14 @@ const Sidebar = ({ openNav, onCloseNav }) => {
           display: "flex",
           flexDirection: "column",
         },
+        padding: "24px 0",
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: "inline-flex" }}>
+      {/* <Box sx={{ px: 2.5, py: 3, display: "inline-flex" }}>
         <Link href="/admin">
           Brijesh <span>Gupta</span>
         </Link>
-      </Box>
+      </Box> */}
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <StyledAccount>

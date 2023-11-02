@@ -4,12 +4,10 @@ import {
   Box,
   Button,
   Stack,
-  Tab,
-  Tabs,
+  Snackbar,
   TextField,
   Typography,
 } from "@mui/material";
-import { useState, useCallback, useEffect } from "react";
 import Head from "next/head";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -24,8 +22,8 @@ function Copyright(props) {
       {...props}
     >
       {"Copyright © "}
-      <a color="inherit" href="https://bgupta.vercel.app">
-        bgupta.vercel.app
+      <a color="inherit" href="https://2amartist.in/" style={{ color: "blue" }}>
+        2amartist.in
       </a>{" "}
       {new Date().getFullYear()}
       {"."}
@@ -35,7 +33,6 @@ function Copyright(props) {
 
 const Page = () => {
   const router = useRouter();
-  const [method, setMethod] = useState("email");
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -52,17 +49,35 @@ const Page = () => {
     onSubmit: async (values, helpers) => {
       const { email, password } = values;
       try {
-        await signIn(email, password, router, "/admin");
+        const { result, error } = await signIn(email, password);
+        if (result && result.user) {
+          helpers.setStatus({
+            open: true,
+            message: "Authentication successful! Redirecting...",
+            success: "success",
+          });
+          router.push("/admin");
+        } else if (error) {
+          helpers.setStatus({
+            open: true,
+            message:
+              error.code === "auth/wrong-password"
+                ? "Invalid password"
+                : "Something went wrong! Please try again later.",
+            success: "error",
+          });
+          return;
+        }
       } catch (err) {
-        helpers.setStatus({ success: false });
-        helpers.setErrors({ submit: err.message });
+        helpers.setStatus({
+          open: true,
+          message: err.message,
+          success: "error",
+        });
         helpers.setSubmitting(false);
       }
     },
   });
-  const handleMethodChange = useCallback((event, value) => {
-    setMethod(value);
-  }, []);
 
   return (
     <>
@@ -90,74 +105,74 @@ const Page = () => {
           }}
         >
           <div>
-            <Stack spacing={1} sx={{ mb: 3 }}>
-              <Typography variant="h4">Sign in</Typography>
+            <Stack
+              spacing={1}
+              sx={{
+                mb: 5,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Typography variant="h5">Sign in</Typography>
             </Stack>
-            <Tabs onChange={handleMethodChange} sx={{ mb: 3 }} value={method}>
-              <Tab label="Email" value="email" />
-              <Tab label="Phone Number" value="phoneNumber" />
-            </Tabs>
-            {method === "email" && (
-              <form noValidate onSubmit={formik.handleSubmit}>
-                <Stack spacing={3}>
-                  <TextField
-                    error={!!(formik.touched.email && formik.errors.email)}
-                    fullWidth
-                    helperText={formik.touched.email && formik.errors.email}
-                    label="Email Address"
-                    name="email"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    type="email"
-                    value={formik.values.email}
-                  />
-                  <TextField
-                    error={
-                      !!(formik.touched.password && formik.errors.password)
-                    }
-                    fullWidth
-                    helperText={
-                      formik.touched.password && formik.errors.password
-                    }
-                    label="Password"
-                    name="password"
-                    onBlur={formik.handleBlur}
-                    onChange={formik.handleChange}
-                    type="password"
-                    value={formik.values.password}
-                  />
-                </Stack>
-                {formik.errors.submit && (
-                  <Typography color="error" sx={{ mt: 3 }} variant="body2">
-                    {formik.errors.submit}
-                  </Typography>
-                )}
-                <Button
+
+            <form noValidate onSubmit={formik.handleSubmit}>
+              <Stack spacing={3}>
+                <TextField
+                  error={!!(formik.touched.email && formik.errors.email)}
                   fullWidth
-                  size="large"
-                  sx={{ mt: 3 }}
-                  type="submit"
-                  variant="contained"
-                >
-                  Continue
-                </Button>
-              </form>
-            )}
-            {method === "phoneNumber" && (
-              <div>
-                <Typography sx={{ mb: 1 }} variant="h6">
-                  Not available in the demo
-                </Typography>
-                <Typography color="text.secondary">
-                  To prevent unnecessary costs we disabled this feature in the
-                  demo.
-                </Typography>
-              </div>
-            )}
+                  helperText={formik.touched.email && formik.errors.email}
+                  label="Email Address"
+                  name="email"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="email"
+                  value={formik.values.email}
+                />
+                <TextField
+                  error={!!(formik.touched.password && formik.errors.password)}
+                  fullWidth
+                  helperText={formik.touched.password && formik.errors.password}
+                  label="Password"
+                  name="password"
+                  onBlur={formik.handleBlur}
+                  onChange={formik.handleChange}
+                  type="password"
+                  value={formik.values.password}
+                />
+              </Stack>
+              <Button
+                fullWidth
+                size="large"
+                sx={{ mt: 3 }}
+                type="submit"
+                variant="contained"
+              >
+                Continue
+              </Button>
+            </form>
           </div>
           <Copyright sx={{ mt: 8, mb: 4 }} />
         </Box>
       </Box>
+      <Snackbar
+        open={formik.status?.open}
+        autoHideDuration={6000}
+        onClose={() => {
+          formik.setStatus((prev) => ({ ...prev, open: false }));
+        }}
+      >
+        <Alert
+          onClose={() => {
+            formik.setStatus((prev) => ({ ...prev, open: false }));
+          }}
+          severity={formik.status?.success}
+          sx={{ width: "100%" }}
+        >
+          {formik.status?.message}
+        </Alert>
+      </Snackbar>
     </>
   );
 };

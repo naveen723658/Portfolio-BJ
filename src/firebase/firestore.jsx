@@ -1,6 +1,4 @@
 import {
-  connectFirestoreEmulator,
-  doc,
   getFirestore,
 } from "firebase/firestore";
 import app from "./app";

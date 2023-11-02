@@ -27,30 +27,18 @@ import styled from "@emotion/styled";
 // components
 import Iconify from "@/hooks/iconify";
 import { UserListToolbar } from "../../user/index";
-import storage from "@/firebase/storage";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytesResumable,
-} from "firebase/storage";
 import { useEffect } from "react";
 import {
-  addDoc,
   collection,
   deleteDoc,
   doc,
   getDocs,
-  setDoc,
   query,
   where,
   limit,
   orderBy,
 } from "firebase/firestore";
 import db from "@/firebase/firestore";
-import auth from "@/firebase/auth";
-import { useAuthContext } from "@/context/AuthContext";
-import { useFetchAllImagesMeta } from "@/hooks/Firebase/fetchdata";
 
 import Scrollbar from "../../scrollbar/Scrollbar";
 import VideoCard from "./VideoCard";
@@ -77,17 +65,7 @@ const VisuallyHiddenInput = styled.input`
   white-space: nowrap;
   width: 1px;
 `;
-const VisuallyHiddenSelect = styled.select`
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  white-space: nowrap;
-  width: 1px;
-`;
+
 export default function VideoUpload() {
   // for modal
   const [open, setOpen] = React.useState(false);
@@ -122,7 +100,6 @@ export default function VideoUpload() {
 
   // for video input
   const [videos, setVideos] = useState([]);
-
   return (
     <>
       <Container>
@@ -191,7 +168,10 @@ export default function VideoUpload() {
               <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 4 }} spacing={2}>
                 {data.length > 0 &&
                   data.map((item, index) => (
-                    <VideoCard option={{ item: item, key: index }} />
+                    <VideoCard
+                      option={{ item: item, key: index }}
+                      key={item.id}
+                    />
                   ))}
               </Masonry>
             </Box>
