@@ -1,4 +1,61 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "video",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "aspectRatio",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Date",
+          "order": "ASCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "video",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "aspectRatio",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Date",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "video",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "hero",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Date",
+          "order": "DESCENDING"
+        }
+      ]
+    },
+    {
+      "collectionGroup": "video",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "LoopVideo",
+          "order": "ASCENDING"
+        },
+        {
+          "fieldPath": "Date",
+          "order": "DESCENDING"
+        }
+      ]
+    }
+  ],
   "fieldOverrides": []
 }

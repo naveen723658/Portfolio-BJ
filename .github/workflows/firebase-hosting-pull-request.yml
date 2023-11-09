@@ -3,60 +3,15 @@
 
 name: Deploy to Firebase Hosting on PR
 'on': pull_request
-env:
-  NEXT_PUBLIC_FIREBASE_apiKey: "${{secrets.NEXT_PUBLIC_FIREBASE_apiKey}}"
-  NEXT_PUBLIC_authDomain: "${{secrets.NEXT_PUBLIC_authDomain}}"
-  VITE_FIREBASE_databaseURL: "${{secrets.VITE_FIREBASE_databaseURL}}"
-  NEXT_PUBLIC_projectId: "${{secrets.NEXT_PUBLIC_projectId}}"
-  NEXT_PUBLIC_storageBucket: "${{secrets.NEXT_PUBLIC_storageBucket}}"
-  NEXT_PUBLIC_messagingSenderId: "${{secrets.NEXT_PUBLIC_messagingSenderId}}"
-  NEXT_PUBLIC_measurementId: "${{secrets.NEXT_PUBLIC_measurementId}}"
-  NEXT_PUBLIC_appId: "${{secrets.NEXT_PUBLIC_appId}}"
-  NEXTAUTH_SECRET: "${{secrets.NEXTAUTH_SECRET}}"
-  NEXTAUTH_URL: "${{secrets.NEXTAUTH_URL}}"
-  FIREBASE_CLI_EXPERIMENTS: webframeworks
 jobs:
   build_and_preview:
     if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        id: pnpm-install
-        with:
-          version: 8
-          run_install: false
-
-      - name: Get pnpm store directory
-        id: pnpm-cache
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Build Website
-        run: pnpm build
-
+      - uses: actions/checkout@v3
+      - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_BRIJESH_KUMAR_96397 }}'
-          channelId: live
           projectId: brijesh-kumar-96397

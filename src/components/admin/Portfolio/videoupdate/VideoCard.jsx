@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import Link from "next/link";
 
 export default function VideoCard(option) {
-  const { item, key, loading = true } = option.option;
+  const { item, key, setSelectedData } = option.option;
 
   return (
     <Card sx={{ maxWidth: 345 }} key={item.id}>
@@ -25,7 +25,15 @@ export default function VideoCard(option) {
       </CardContent>
       <CardActions>
         <Link href={`/admin/video/edit/${item.id}`}>Edit</Link>
-        <Button size="small">Delete</Button>
+        <Button
+          size="small"
+          onClick={(e) => {
+            e.preventDefault();
+            setSelectedData(item.id);
+          }}
+        >
+          Delete
+        </Button>
       </CardActions>
     </Card>
   );

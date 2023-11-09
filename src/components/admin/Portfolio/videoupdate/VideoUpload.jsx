@@ -8,6 +8,7 @@ import {
   Typography,
   Box,
   TextField,
+  Dropdown,
   ClickAwayListener,
   Snackbar,
   MenuList,
@@ -18,9 +19,12 @@ import {
   Chip,
   Badge,
   FormControl,
+  Backdrop,
+  CircularProgress,
   Autocomplete,
   MenuItem,
   Modal,
+  Menu,
 } from "@mui/material";
 import Masonry from "@mui/lab/Masonry";
 import styled from "@emotion/styled";
@@ -39,9 +43,10 @@ import {
   orderBy,
 } from "firebase/firestore";
 import db from "@/firebase/firestore";
-
+import dayjs from "dayjs";
 import Scrollbar from "../../scrollbar/Scrollbar";
 import VideoCard from "./VideoCard";
+import { processAndUpload, processAndDelete } from "@/hooks/Firebase/Index";
 const style = {
   position: "absolute",
   top: "50%",
@@ -71,8 +76,18 @@ export default function VideoUpload() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  //
+
+  // for data category list
   const [category, setCategory] = useState([]);
+  //
+
+  // for data list
   const [data, setData] = useState([]);
+
+  // for loading
+  const [Loading, setLoading] = React.useState(false);
+
   useEffect(() => {
     const fetchCategory = async () => {
       const folderRef = await getDocs(
@@ -86,7 +101,7 @@ export default function VideoUpload() {
     };
     const fetchdata = async () => {
       const videoRef = collection(db, "/Data/Portfolio/video");
-      const q = query(videoRef);
+      const q = query(videoRef, orderBy("Date", "desc"));
       const querySnapshot = await getDocs(q);
       const temp = querySnapshot.docs.map((doc) => ({
         id: doc.id,
@@ -98,8 +113,31 @@ export default function VideoUpload() {
     fetchCategory();
   }, []);
 
-  // for video input
+  // for new data or video
   const [videos, setVideos] = useState([]);
+
+  // for storing selected category
+  const [selected, setselected] = useState();
+
+  // for storing message
+  const [snackbarStatus, setSnackbarStatus] = useState({
+    open: false,
+    message: "",
+    severity: "success",
+  });
+
+  // for filter
+  const [anchorEl, setAnchorEl] = useState(null);
+  const filteropen = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handlefilterClose = () => {
+    setAnchorEl(null);
+  };
+
+  // for deleting data
+  const [selectedData, setSelectedData] = useState(null);
   return (
     <>
       <Container>
@@ -153,9 +191,34 @@ export default function VideoUpload() {
               component="label"
               variant="contained"
               startIcon={<Iconify icon="ion:filter" />}
+              aria-controls={filteropen ? "long-menu" : undefined}
+              aria-expanded={filteropen ? "true" : undefined}
+              aria-haspopup="true"
+              onClick={handleClick}
             >
               Filter
             </Button>
+            <Menu
+              id="long-menu"
+              MenuListProps={{
+                "aria-labelledby": "long-button",
+              }}
+              anchorEl={anchorEl}
+              open={filteropen}
+              onClose={handlefilterClose}
+              PaperProps={{
+                style: {
+                  maxHeight: 60 * 4.5,
+                  width: "auto",
+                },
+              }}
+            >
+              {category.map((option) => (
+                <MenuItem key={option} onClick={handleClose}>
+                  {option.value}
+                </MenuItem>
+              ))}
+            </Menu>
           </Stack>
           <Scrollbar
             sx={{
@@ -169,7 +232,11 @@ export default function VideoUpload() {
                 {data.length > 0 &&
                   data.map((item, index) => (
                     <VideoCard
-                      option={{ item: item, key: index }}
+                      option={{
+                        item: item,
+                        key: index,
+                        setSelectedData: setSelectedData,
+                      }}
                       key={item.id}
                     />
                   ))}
@@ -178,6 +245,28 @@ export default function VideoUpload() {
           </Scrollbar>
         </Card>
       </Container>
+
+      <Snackbar
+        open={snackbarStatus.open}
+        autoHideDuration={6000}
+        onClose={() => {
+          setSnackbarStatus((prev) => ({ ...prev, open: false }));
+        }}
+      >
+        <Alert
+          onClose={() => {
+            setSnackbarStatus((prev) => ({ ...prev, open: false }));
+          }}
+          severity={snackbarStatus.severity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarStatus.message}
+        </Alert>
+      </Snackbar>
+      <Backdrop sx={{ color: "#fff", zIndex: "9999" }} open={Loading}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      {/* edit modal */}
       <Modal
         open={open}
         onClose={() => {
@@ -197,16 +286,30 @@ export default function VideoUpload() {
           >
             <Autocomplete
               freeSolo
+              id="free-solo-2-demo"
               sx={{
                 width: "100%",
               }}
               disableClearable
-              options={category.map((option) => option.value)}
+              onInputChange={(e, value) => {
+                setselected(value);
+              }}
+              options={
+                category.length > 0
+                  ? category.map((option) => option.value)
+                  : []
+              }
+              renderOption={(prop, option) => {
+                return (
+                  <li {...prop} key={`${option}`}>
+                    {option}
+                  </li>
+                );
+              }}
               renderInput={(params) => (
                 <TextField
                   {...params}
-                  variant="outlined"
-                  label="Select Category"
+                  placeholder="Search Seasons"
                   InputProps={{
                     ...params.InputProps,
                     type: "search",
@@ -214,13 +317,12 @@ export default function VideoUpload() {
                 />
               )}
             />
-
             <Button
               component="label"
               variant="contained"
               sx={{ width: "100%", p: 2 }}
               endIcon={
-                <Badge badgeContent={videos?.length} color="success">
+                <Badge badgeContent={videos.length} color="success">
                   <Iconify icon="ant-design:select-outlined" />
                 </Badge>
               }
@@ -230,24 +332,169 @@ export default function VideoUpload() {
                 type="file"
                 accept="video/*"
                 multiple
-                onChange={(ev) => {
+                onChange={async (ev) => {
                   let temp = [];
-                  if (ev.target.files.length > 0) {
-                    Array.from(ev.target.files).forEach((file) => {
-                      temp.push(file);
-                    });
-                    setVideos(temp);
+                  try {
+                    if (ev.target.files.length > 0) {
+                      setLoading(true);
+                      await Promise.all(
+                        Array.from(ev.target.files).map(async (file) => {
+                          const fileUrl = URL.createObjectURL(file);
+                          const posterDetail =
+                            await generateVideoThumbnailViaUrl(fileUrl);
+                          temp.push({
+                            Date: dayjs().toDate(),
+                            category: selected,
+                            videoTitle: file.name,
+                            thumbnailUrl: posterDetail?.thumbnailUrl,
+                            videoUrl: fileUrl,
+                            videoDescription: "",
+                            hero: false,
+                            LoopVideo: false,
+                            contributor: [
+                              {
+                                title: "",
+                                name: "",
+                                link: "",
+                              },
+                            ],
+                            width: posterDetail?.width,
+                            height: posterDetail?.height,
+                            aspectRatio: posterDetail?.aspectRatio,
+                          });
+                        })
+                      );
+                      setVideos(temp);
+                      setLoading(false);
+                    }
+                  } catch (error) {
+                    setLoading(false);
+                    console.log(error);
                   }
                 }}
               />
             </Button>
+
             <Button
               type="submit"
               variant="contained"
               sx={{ width: "100%", p: 2 }}
               startIcon={<Iconify icon="iconamoon:cloud-upload" />}
+              onClick={async (e) => {
+                e.preventDefault();
+                if (videos.length <= 0) {
+                  return;
+                }
+                setLoading(true);
+                let temp = [];
+                try {
+                  await Promise.all(
+                    Array.from(videos).map(async (file) => {
+                      const { processedObj, newID } = await processAndUpload(
+                        file,
+                        `${file.category}`,
+                        `/Data/Portfolio/video`,
+                        "new",
+                        setSnackbarStatus
+                      );
+
+                      temp.push({
+                        ...processedObj,
+                        id: newID,
+                      });
+                    })
+                  );
+
+                  // Updating state with previous data and new data
+                  setData((prevData) => [...temp, ...prevData]);
+
+                  setSnackbarStatus({
+                    open: true,
+                    message: "Videos uploaded successfully",
+                    severity: "success",
+                  });
+
+                  setLoading(false);
+                  handleClose();
+                } catch (error) {
+                  setLoading(false);
+                  handleClose();
+                  setSnackbarStatus({
+                    open: true,
+                    message: "Something went wrong!",
+                    severity: "error",
+                  });
+                  console.log(error);
+                }
+              }}
             >
               Upload
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
+      {/* delete modal */}
+      <Modal
+        keepMounted
+        open={selectedData ? true : false}
+        onClose={() => {
+          setSelectedData(null);
+        }}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="keep-mounted-modal-title" variant="h6" component="h2">
+            Are you sure you want to delete this video?
+          </Typography>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            gap={2}
+            sx={{ width: "100%" }}
+          >
+            <Button
+              variant="contained"
+              color="success"
+              sx={{ width: "100%" }}
+              onClick={(e) => {
+                e.preventDefault();
+                setSelectedData(null);
+              }}
+            >
+              Cancel
+            </Button>
+
+            <Button
+              variant="outlined"
+              color="error"
+              sx={{ width: "100%" }}
+              onClick={async (e) => {
+                e.preventDefault();
+                setLoading(true);
+                try {
+                  await processAndDelete(
+                    `/Data/Portfolio/video`,
+                    selectedData,
+                    setSnackbarStatus
+                  );
+                  setData(data.filter((item) => item.id !== selectedData));
+                  setSelectedData(null);
+                  setLoading(false);
+                } catch (error) {
+                  console.log(error.message);
+                  setSelectedData(null);
+                  setLoading(false);
+                  setSnackbarStatus({
+                    open: true,
+                    message: "Something went wrong!",
+                    severity: "error",
+                  });
+                }
+              }}
+            >
+              Delete
             </Button>
           </Stack>
         </Box>
