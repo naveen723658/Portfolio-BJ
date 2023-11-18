@@ -19,7 +19,10 @@ import {
   RadioGroup,
   FormControlLabel,
   Autocomplete,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
+import { useRouter } from "next/router";
 import Label from "../../label/Label";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -37,16 +40,26 @@ import {
 } from "firebase/firestore";
 import db from "@/firebase/firestore";
 import dayjs from "dayjs";
-import { useRouter } from "next/router";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker } from "@mui/x-date-pickers/DesktopDatePicker";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import {
-  generateVideoThumbnails,
-  generateVideoThumbnailViaUrl,
-} from "@/hooks/videometa/VideoMeta";
+import { generateVideoThumbnailViaUrl } from "@/hooks/videometa/VideoMeta";
+import { processAndUpload, processAndDelete } from "@/hooks/Firebase/Index";
 import Link from "next/link";
 import { UploadFile, uploadData } from "@/hooks/Firebase/Index";
+
+import { styled } from "@mui/material/styles";
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 function CustomDatePicker({ date, setDate }) {
   return (
@@ -72,11 +85,10 @@ export default function EditPage() {
   const router = useRouter();
   const { id } = router.query;
 
-  const [loading, setLoading] = useState({
-    status: false,
-  });
+  const [Loading, setLoading] = React.useState(false);
 
   const [category, setCategory] = useState([]);
+  const [selected, setselected] = useState();
   const [data, setData] = useState({
     Date: dayjs().toDate(),
     category: "",
@@ -97,12 +109,15 @@ export default function EditPage() {
     height: 0,
     aspectRatio: "",
   });
+
   const [snackbarStatus, setSnackbarStatus] = useState({
     open: false,
     message: "",
     severity: "success",
   });
+
   useEffect(() => {
+    // category
     const fetchCategory = async () => {
       const folderRef = await getDocs(
         collection(db, "/Data/Portfolio", "folders")
@@ -113,6 +128,8 @@ export default function EditPage() {
       }));
       setCategory(temp);
     };
+
+    // data
     const fetchdata = async () => {
       const videoRef = doc(
         collection(doc(db, "/Data/Portfolio/"), "video"),
@@ -152,9 +169,6 @@ export default function EditPage() {
     fetchCategory();
   }, [id]);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
   return (
     <div>
       {data && (
@@ -250,23 +264,32 @@ export default function EditPage() {
                     <TableCell>
                       <Autocomplete
                         freeSolo
+                        id="free-solo-2-demo"
                         sx={{
                           width: "100%",
                         }}
+                        disabled={data.category ? true : false}
                         disableClearable
-                        value={data.category && data.category}
-                        options={category.map((option) => option.value)}
+                        value={data.category}
+                        onInputChange={(e, value) => {
+                          setselected(value);
+                        }}
+                        options={
+                          category.length > 0
+                            ? category.map((option) => option.value)
+                            : []
+                        }
+                        renderOption={(prop, option) => {
+                          return (
+                            <li {...prop} key={`${option}`}>
+                              {option}
+                            </li>
+                          );
+                        }}
                         renderInput={(params) => (
                           <TextField
                             {...params}
-                            variant="outlined"
-                            label="Select Category"
-                            onChange={(e) =>
-                              setData((prev) => ({
-                                ...prev,
-                                category: e.target.value,
-                              }))
-                            }
+                            placeholder="Search Seasons"
                             InputProps={{
                               ...params.InputProps,
                               type: "search",
@@ -367,7 +390,7 @@ export default function EditPage() {
                                 />
                                 <TextField
                                   value={item.link}
-                                  placeholder="Link"
+                                  placeholder="Social media Link"
                                   onChange={(e) => {
                                     const updatedContributor = [
                                       ...data.contributor,
@@ -494,35 +517,6 @@ export default function EditPage() {
                         objectPosition: "top",
                       }}
                     />
-                    {/* {data.videoUrl.length > 0 && (
-                      <Box
-                        sx={{
-                          position: "absolute",
-                          top: "50%",
-                          left: "50%",
-                          width: "100%",
-                          height: "100%",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          transform: "translate(-50%, -50%)",
-                        }}
-                      >
-                        <Box
-                          component={"span"}
-                          sx={{
-                            cursor: "pointer",
-                            color: "#ffff",
-                            padding: "1rem",
-                            border: "1px solid #ffff",
-                            borderRadius: "50%",
-                          }}
-                        >
-                          <Iconify icon="mingcute:play-fill" />
-                        </Box>
-                      </Box>
-                    )} */}
                   </Box>
                 ) : (
                   <Box
@@ -570,59 +564,76 @@ export default function EditPage() {
                   }}
                 >
                   <Button
-                    component="submit"
-                    variant="contained"
-                    sx={{ color: "white", mt: 2 }}
-                    startIcon={<Iconify icon="eva:upload-outline" />}
-                    onClick={async () => {
-                      const videometa = await generateVideoThumbnailViaUrl(
-                        data.videoUrl,
-                        5
-                      );
-
-                      //   const file = event.target.files[0];
-                      setData((prev) => ({
-                        ...prev,
-                        aspectRatio: videometa.aspectRatio,
-                        height: videometa.height,
-                        width: videometa.width,
-                        thumbnailUrl: videometa.thumbnailUrl,
-                      }));
+                    sx={{
+                      width: "min-content",
+                      height: "min-content",
+                      p: 2,
+                      fontSize: "1rem",
+                      textTransform: "lowercase",
+                      whiteSpace: "nowrap",
                     }}
-                  >
-                    Thumbnail
-                    {/* <input
-                      type="file"
-                      accept="image/*"
-                      style={{ display: "none" }}
-                      name="upload"
-                      id="upload"
-                    /> */}
-                  </Button>
-
-                  <a href={data.videoUrl}>video</a>
-                  {/* <Button
                     component="label"
+                    disabled={data.videoUrl?.length > 0 ? false : true}
                     variant="contained"
-                    sx={{ color: "white", mt: 2 }}
+                    color="success"
                     startIcon={<Iconify icon="eva:upload-outline" />}
                     onChange={(event) => {
                       const file = event.target.files[0];
-                      setData((prev) => ({
-                        ...prev,
-                        videoUrl: URL.createObjectURL(file),
-                      }));
+                      if (file) {
+                        if (
+                          data.thumbnailUrl &&
+                          data.thumbnailUrl.startsWith("blob")
+                        ) {
+                          URL.revokeObjectURL(data.thumbnailUrl);
+                        }
+                        setData((prev) => ({
+                          ...prev,
+                          thumbnailUrl: URL.createObjectURL(file),
+                        }));
+                      }
                     }}
                   >
-                    Video
-                    <input
-                      type="file"
-                      accept="video/*"
-                      style={{ display: "none" }}
-                      name="upload"
-                      id="upload"
-                    />
-                  </Button> */}
+                    Thumbnail
+                    <VisuallyHiddenInput type="file" accept="image/*" />
+                  </Button>
+                  <Button
+                    sx={{
+                      width: "min-content",
+                      height: "min-content",
+                      p: 2,
+                      fontSize: "1rem",
+                      textTransform: "lowercase",
+                      whiteSpace: "nowrap",
+                    }}
+                    component="label"
+                    variant="contained"
+                    startIcon={<Iconify icon="octicon:upload-16" />}
+                    onChange={async (event) => {
+                      const file = event.target.files[0];
+                      if (file) {
+                        if (data.videoUrl && data.videoUrl.startsWith("blob")) {
+                          URL.revokeObjectURL(data.thumbnailUrl);
+                          URL.revokeObjectURL(data.videoUrl);
+                        }
+                        const fileurl = URL.createObjectURL(file);
+                        const posterDetail = await generateVideoThumbnailViaUrl(
+                          fileurl
+                        );
+                        setData((prev) => ({
+                          ...prev,
+                          videoTitle: file.name,
+                          thumbnailUrl: posterDetail?.thumbnailUrl,
+                          videoUrl: fileurl,
+                          width: posterDetail?.width,
+                          height: posterDetail?.height,
+                          aspectRatio: posterDetail?.aspectRatio,
+                        }));
+                      }
+                    }}
+                  >
+                    Video file
+                    <VisuallyHiddenInput type="file" accept="video/*" />
+                  </Button>
                 </Box>
               </Box>
             </Box>
@@ -643,6 +654,9 @@ export default function EditPage() {
                 {snackbarStatus.message}
               </Alert>
             </Snackbar>
+            <Backdrop sx={{ color: "#fff", zIndex: "9999" }} open={Loading}>
+              <CircularProgress color="inherit" />
+            </Backdrop>
 
             <Box
               sx={{
@@ -661,54 +675,41 @@ export default function EditPage() {
               <Button
                 className="btn-icon"
                 variant="contained"
-                sx={{ backgroundColor: "#a64646", color: "white", mt: 2 }}
-                onClick={async () => {
-                  const { success, downloadURL } = await UploadFile(
-                    data.thumbnailUrl,
-                    "thumbnails"
-                  );
-
-                  if (success && downloadURL) {
-                    // Update the thumbnailUrl in the state
-                    setData((prev) => ({
-                      ...prev,
-                      thumbnailUrl: downloadURL,
-                    }));
+                color="success"
+                sx={{ mt: 2 }}
+                onClick={async (e) => {
+                  e.preventDefault();
+                  console.log(id);
+                  if (
+                    data.videoUrl.length <= 0 &&
+                    data.category.length <= 0 &&
+                    data.videoTitle.length <= 0
+                  ) {
+                    return;
+                  }
+                  setLoading(true);
+                  try {
+                    const { processedObj, newID } = await processAndUpload(
+                      data,
+                      `${data.category}`,
+                      `/Data/Portfolio/video`,
+                      id,
+                      setSnackbarStatus
+                    );
+                    setLoading(false);
+                    router.push(`/admin/video/edit/${newID}`);
+                  } catch (error) {
+                    setLoading(false);
+                    setSnackbarStatus({
+                      open: true,
+                      message: "Something went wrong!",
+                      severity: "error",
+                    });
+                    console.log(error);
                   }
                 }}
               >
                 Save
-              </Button>
-              <Button
-                className="btn-icon"
-                variant="contained"
-                sx={{ backgroundColor: "#a64646", color: "white", mt: 2 }}
-                onClick={async () => {
-                  if (data.thumbnailUrl.includes("firebasestorage")) {
-                    try {
-                      // Update Firestore document with the new data object
-                      const docRef = doc(
-                        collection(db, "Data", "Portfolio", "video"),
-                        id
-                      );
-                      await updateDoc(docRef, {
-                        ...data, // Use the updated data object with new thumbnailUrl
-                      });
-
-                      // Show success message
-                      setSnackbarStatus({
-                        open: true,
-                        message: "Data Updated Successfully",
-                        severity: "success",
-                      });
-                    } catch (error) {
-                      // Handle Firestore update error
-                      console.error("Firestore update error:", error);
-                    }
-                  }
-                }}
-              >
-                update
               </Button>
             </Box>
           </Box>

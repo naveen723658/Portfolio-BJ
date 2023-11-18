@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useRouter } from "next/router"; 
 // @mui
 import {
   Card,
@@ -8,17 +9,9 @@ import {
   Typography,
   Box,
   TextField,
-  Dropdown,
-  ClickAwayListener,
   Snackbar,
-  MenuList,
   Alert,
-  Select,
-  Option,
-  Paper,
-  Chip,
   Badge,
-  FormControl,
   Backdrop,
   CircularProgress,
   Autocomplete,
@@ -47,6 +40,7 @@ import dayjs from "dayjs";
 import Scrollbar from "../../scrollbar/Scrollbar";
 import VideoCard from "./VideoCard";
 import { processAndUpload, processAndDelete } from "@/hooks/Firebase/Index";
+import { generateVideoThumbnailViaUrl } from "@/hooks/videometa/VideoMeta";
 const style = {
   position: "absolute",
   top: "50%",
@@ -72,6 +66,7 @@ const VisuallyHiddenInput = styled.input`
 `;
 
 export default function VideoUpload() {
+  const router = useRouter();
   // for modal
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -157,9 +152,12 @@ export default function VideoUpload() {
               variant="contained"
               startIcon={<Iconify icon="eva:plus-fill" />}
               sx={{ mr: 2 }}
+              onClick={(e) => {
+                e.preventDefault();
+                router.push("/admin/video/edit/new");
+              }}
             >
               Single upload
-              <input type="file" multiple accept="video/*" hidden />
             </Button>
             <Button
               component="label"
